@@ -1,48 +1,320 @@
 package com.example.translili;
 
+import java.io.BufferedReader;
+
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+
+import data.ScheduleList;
+
 import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Message;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class AskRideActivity extends ActionBarActivity {
-
-	TextView userProfile;
+	private Vector<ScheduleList> schedules = null;
+	private ListView listView;
+	private Context mainContext;
+	private TextView userProfile;
+	
+	//user inputs  
+	private String name = null;
+	private String phonenumber = null;
+	private String from=null;
+	private String to=null;
+	private String date=null;
+	
+	public final static String SEARCH_AVILABLE_TRANSPORTS = "http://tutbereket.net//LiliTransport/search_avilable_transports.php";
+	public final static String BOOKING_URL = "http://tutbereket.net//LiliTransport/insert_user_book.php";
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_ask_ride);
-		
-		userProfile=(TextView) findViewById(R.id.userProfile);
-		
-		String name= getIntent().getStringExtra("name");
-		String from=getIntent().getStringExtra("from");
-		String to=getIntent().getStringExtra("to");
-		String phoneNumber=getIntent().getStringExtra("contact");
-		String date= getIntent().getStringExtra("date");
-		
-		userProfile.setText(Html.fromHtml(name+"<br/>"+from+"<br/>"+to+"<br/>"+phoneNumber + date));
-	
+		userProfile = (TextView) findViewById(R.id.userProfile);
+
+		name = getIntent().getStringExtra("name");
+		from = getIntent().getStringExtra("from");
+		to = getIntent().getStringExtra("to");
+		phonenumber = getIntent().getStringExtra("contact");
+		date = getIntent().getStringExtra("date");
+		//date = "2014-09-27";
+		userProfile.setText(Html.fromHtml("Name: " + name + "<br/>" + "From: "
+				+ from + "<br/>" + "To: " + to + "<br/>" + "Phonenumber: "
+				+ phonenumber + "<br/>" + "Date: " + date));
+
+		listView = (ListView) findViewById(R.id.offerList);
+		this.mainContext = this;
+		new SearchAvilableTransports().execute(SEARCH_AVILABLE_TRANSPORTS);
+
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.ask_ride, menu);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
+	/**
+	 * Request available transports, by day, starting point and destination point
+	 * 
+	 * @author Thinkpad
+	 * 
+	 */
+	private class SearchAvilableTransports extends
+			AsyncTask<String, Void, String> {
+		ProgressDialog progressDialog ;
+		
+		
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			progressDialog= ProgressDialog.show(AskRideActivity.this, "Searching", "Searching Avilable Rides");
+		}
+
+		@Override
+		protected String doInBackground(String... params) {
+			// TODO Auto-generated method stub
+			String content = null;
+			try {
+				DefaultHttpClient httpClient = new DefaultHttpClient();
+				System.out.println(params[0]);
+				
+				HttpPost httpPost = new HttpPost(params[0]);
+				List<NameValuePair> nameValuePaire = new ArrayList<NameValuePair>(
+						4);
+
+				nameValuePaire.add(new BasicNameValuePair("starting", from));
+				nameValuePaire.add(new BasicNameValuePair("destination",
+						to));
+				nameValuePaire
+						.add(new BasicNameValuePair("date", date));
+				nameValuePaire
+				.add(new BasicNameValuePair("phonenumber", phonenumber));
+				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePaire));
+
+				HttpResponse httpResponse = httpClient.execute(httpPost);
+				HttpEntity httpEntity = httpResponse.getEntity();
+				
+				InputStream inputStream = httpEntity.getContent();
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(inputStream, "iso-8859-1"), 8);
+				StringBuffer stringBuffer = new StringBuffer();
+				String line = null;
+				while ((line = reader.readLine()) != null) {
+					stringBuffer.append(line);
+				}
+				inputStream.close(); // free memory
+
+				content = stringBuffer.toString();
+				return content;
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				return null;
+			}
+
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			progressDialog.dismiss();
+			System.out.println(result);
+			try {
+				System.out.println("above");
+				schedules = Parser.parse(result);
+				System.out.println("below");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			listView.setAdapter(new ScheduleArrayAdapter(mainContext, schedules));
+		}
+	
+	}
+	
+
+	/**
+	 * Listview adapter
+	 * 
+	 * @author Thinkpad
+	 * 
+	 */
+	private class ScheduleArrayAdapter extends ArrayAdapter<ScheduleList> {
+		Vector<ScheduleList> scheduleList;
+		Context context;
+		
+		public ScheduleArrayAdapter(Context context,
+				Vector<ScheduleList> resource) {
+			super(context, R.layout.schedules, resource);
+			this.scheduleList = resource;
+			this.context = context;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			LayoutInflater inflator = (LayoutInflater) context
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+			if (convertView == null) {
+				convertView = inflator.inflate(R.layout.schedules, parent,
+						false);
+			}
+
+			TextView tvServiceGroup = (TextView) convertView
+					.findViewById(R.id.TextViewServiceGroup);
+			TextView tvTaxiId = (TextView) convertView
+					.findViewById(R.id.TextViewGroupID);
+			TextView tvPickUpTime = (TextView) convertView
+					.findViewById(R.id.TextViewPickUpTime);
+
+			Button button = (Button) convertView
+					.findViewById(R.id.ButtonStatus);
+			
+
+			tvServiceGroup
+					.setText(scheduleList.get(position).getServiceGroup());
+			tvTaxiId.setText(scheduleList.get(position).getTaxiID());
+
+			System.out.println(scheduleList.get(position).getPickUpTime());
+			System.out
+					.println(scheduleList.get(position).getNumbureOfPersons());
+
+			tvPickUpTime.setText(scheduleList.get(position).getPickUpTime());
+			button.setTag(scheduleList.get(position).getTransportID());
+			
+			if(scheduleList.get(position).getStatus().equalsIgnoreCase("booked")){
+				button.setText("Booked");
+				button.setTextColor(Color.GREEN);
+				button.setClickable(false);
+			}else{
+				button.setText("Request");
+			}
+			
+
+			return convertView;
+		}
+	}
+
+	/**
+	 * book the transport
+	 * 
+	 * @param view
+	 */
+	public void bookTransport(View view) {
+		Button button = (Button) view;
+		button.setText("Booked");
+		button.setTextColor(Color.GREEN);
+		button.setClickable(false);
+		int id = (Integer) button.getTag();
+		new BookRideAsynckTask().execute(id);
+	}
+    public void showMyBookedRides(View view){
+    	Intent intent = new Intent(this, BookedRideActivity.class);
+		intent.putExtra("name", name);
+		intent.putExtra("phonenumber", phonenumber);
+		intent.putExtra("date", date);
+		startActivity(intent);
+    }
+    
+    
+	/**
+	 * booking time
+	 * 
+	 * @author Thinkpad
+	 * 
+	 */
+	
+	private class BookRideAsynckTask extends AsyncTask<Integer, Void, String> {
+		ProgressDialog progressDialog;
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			progressDialog= ProgressDialog.show(AskRideActivity.this, "Saving", "Saving....");
+		}
+
+		@Override
+		protected String doInBackground(Integer... params) {
+			// TODO Auto-generated method stub
+			String content = null;
+			try {
+				DefaultHttpClient httpClient = new DefaultHttpClient();
+				System.out.println(params[0]);
+				// get the first argument passed to the execute method
+				HttpPost httpPost = new HttpPost(BOOKING_URL);
+				List<NameValuePair> nameValuePaire = new ArrayList<NameValuePair>(
+						3);
+				nameValuePaire.add(new BasicNameValuePair("name", name));
+				nameValuePaire.add(new BasicNameValuePair("phonenumber",
+						phonenumber));
+				nameValuePaire.add(new BasicNameValuePair("id", Integer
+						.toString(params[0])));
+				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePaire));
+
+				HttpResponse httpResponse = httpClient.execute(httpPost);
+				HttpEntity httpEntity = httpResponse.getEntity();
+				InputStream inputStream = httpEntity.getContent();
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(inputStream, "iso-8859-1"), 8);
+				StringBuffer stringBuffer = new StringBuffer();
+				String line = null;
+				while ((line = reader.readLine()) != null) {
+					stringBuffer.append(line);
+				}
+				inputStream.close(); // free memory
+
+				content = stringBuffer.toString();
+				return content;
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				return null;
+			}
+
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			System.out.println(result);
+			progressDialog.dismiss();
+		}
+
+	}
+
 }

@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Toast;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -27,7 +28,6 @@ public class MainActivity extends ActionBarActivity {
 	private EditText phoneNumber;
 	private Button datePicker;
 
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -36,8 +36,8 @@ public class MainActivity extends ActionBarActivity {
 		from = (EditText) findViewById(R.id.from);
 		phoneNumber = (EditText) findViewById(R.id.phoneNumber);
 		name = (EditText) findViewById(R.id.name);
-		datePicker = (Button)findViewById(R.id.datePicker);
-		
+		datePicker = (Button) findViewById(R.id.datePicker);
+
 	}
 
 	@Override
@@ -63,17 +63,40 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	public void askForRide(View V) {
-		Intent intent = new Intent(this, AskRideActivity.class);
-		intent.putExtra("name", name.getText().toString());
-		intent.putExtra("from", from.getText().toString());
-		intent.putExtra("to", to.getText().toString());
-		intent.putExtra("contact", phoneNumber.getText().toString());
-		intent.putExtra("date", datePicker.getText());
-		// System.out.println(from.getText().toString());
-		startActivity(intent);
+		if (!checkForms()) {
+			Toast.makeText(this, " Please Complete Form", Toast.LENGTH_SHORT).show();
+			//Toast.makeText(this, "Please Complete Forms", Toast.LENGTH_SHORT);
+		} else {
+			Intent intent = new Intent(this, AskRideActivity.class);
+			intent.putExtra("name", name.getText().toString());
+			intent.putExtra("from", from.getText().toString());
+			intent.putExtra("to", to.getText().toString());
+			intent.putExtra("contact", phoneNumber.getText().toString());
+			intent.putExtra("date", datePicker.getText());
+			// System.out.println(from.getText().toString());
+			startActivity(intent);
+		}
 	}
 
-	
+	public boolean checkForms() {
+		if (name.getText().toString().trim().equals("")) {
+			return false;
+		} else if (from.getText().toString().trim().equals("")) {
+			return false;
+		}
+		if (to.getText().toString().trim().equals("")) {
+			return false;
+		}
+		if (phoneNumber.getText().toString().trim().equals("")) {
+			return false;
+		}
+		if (datePicker.getText().toString().trim()
+				.equalsIgnoreCase("Pick date")) {
+			return false;
+		}
+
+		return true;
+	}
 
 	@SuppressLint("NewApi")
 	public static class DatePickerFragment extends DialogFragment implements
@@ -89,19 +112,21 @@ public class MainActivity extends ActionBarActivity {
 			int currentDay = c.get(Calendar.DAY_OF_MONTH);
 
 			// Create a new instance of DatePickerDialog and return it
-			return new DatePickerDialog(getActivity(), this, currentYear, currentMonth, currentDay);
+			return new DatePickerDialog(getActivity(), this, currentYear,
+					currentMonth, currentDay);
 		}
 
 		@Override
 		public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
 			// TODO Auto-generated method stub
 			Log.d("arg0", arg0.toString());
-			
-			datePicker=(Button)getActivity().findViewById(R.id.datePicker);
-			String date= Integer.toString(arg3)+"-"+Integer.toString(arg2)+"-"+Integer.toString(arg1);
-					
+
+			datePicker = (Button) getActivity().findViewById(R.id.datePicker);
+			String date = Integer.toString(arg3) + "-" + Integer.toString(arg2)
+					+ "-" + Integer.toString(arg1);
+
 			datePicker.setText(date);
-		
+
 		}
 	}
 

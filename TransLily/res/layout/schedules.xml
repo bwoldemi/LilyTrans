@@ -2,69 +2,53 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:gravity="left|center"
+    android:background="#669900"
     android:paddingBottom="10dp"
     android:paddingLeft="3dp"
-    android:paddingTop="10dp"
-    android:scrollbarAlwaysDrawHorizontalTrack="true"
-     >
+    android:paddingTop="10dp" >
 
     <TextView
-        android:id="@+id/TextView01"
-        android:layout_width="70dip"
+        android:id="@+id/TextViewServiceGroup"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="left"
-        android:paddingLeft="20dip"
-        android:textColor="#d08021"
-        android:textSize="15sp"
-        android:textStyle="bold" >
+        android:padding="5dp"
+        android:textColor="#FFF"
+        android:textSize="20sp" >
     </TextView>
 
     <TextView
-        android:id="@+id/TextView02"
-        android:layout_width="100dip"
+        android:id="@+id/TextViewGroupID"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dip"
-        android:gravity="left"
-        android:textColor="#7f0000"
-        android:textSize="15sp"
-        android:textStyle="bold" >
+        android:padding="5dp"
+        android:textColor="#FFF"
+        android:textSize="20sp" >
     </TextView>
 
     <TextView
-        android:id="@+id/TextView03"
-        android:layout_width="100dip"
+        android:id="@+id/TextViewPickUpTime"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dip"
-        android:gravity="left"
-        android:textColor="#7f0000"
-        android:textSize="15sp"
-        android:textStyle="bold" >
+        android:padding="5dp"
+        android:textColor="#FFF"
+        android:textSize="20sp" >
     </TextView>
 
     <TextView
-        android:id="@+id/TextView04"
-        android:layout_width="100dip"
+        android:id="@+id/TextViewNumberOfPersons"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dip"
-        android:gravity="left"
-        android:textColor="#7f0000"
-        android:textSize="15sp"
-        android:textStyle="bold" >
+        android:padding="5dp"
+        android:textColor="#FFF"
+        android:textSize="20sp" >
     </TextView>
 
     <Button
-        android:text="Request"
-        android:onClick="changeStatus"
-        android:id="@+id/TextView05"
-        android:layout_width="100dip"
+        android:id="@+id/ButtonStatus"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dip"
-        android:gravity="left"
+        android:onClick="bookTransport"
         android:textColor="#7f0000"
-        android:textSize="15sp"
-        android:textStyle="bold" />
-    
-    
+        android:textSize="15sp" />
 
 </LinearLayout>
