@@ -1,0 +1,43 @@
+package server.fi;
+
+import java.util.Vector;
+
+import model.Tasks;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+
+
+
+public class Parser {
+	
+	public static Vector<Tasks> parse(String content)throws JSONException {
+		Vector<Tasks> tasks = new Vector<Tasks>();
+
+		JSONArray jsonArray = new JSONArray(content);
+		Tasks task;
+		for (int i = 0; i < jsonArray.length(); i++) {
+			task = new Tasks();
+			JSONObject object = jsonArray.getJSONObject(i);
+			
+			task.setFirstName(object.getString("FirstName"));
+			task.setLastName(object.getString("LastName"));
+			task.setPhoneNumber(object.getString("PhoneNumber"));
+			task.setTagId(object.getString("TagId"));
+			task.setDestinationPoint(object.getString("Destination"));
+			task.setPickUpTime(object.getString("PickUpTime"));
+			task.setDate(object.getString("Date"));
+			task.setNumbureOfPersons(Integer.parseInt(object
+					.getString("Capacity")));
+			task.setPhonenumber(object.getString("PhoneNumber"));
+			task.setComment(object.getString("Comment"));
+			task.setStatus(object.optString("status"));
+			System.out.println(object.optString("status")+"*************");
+			tasks.add(task);
+		}
+		return tasks;
+	}
+	
+}

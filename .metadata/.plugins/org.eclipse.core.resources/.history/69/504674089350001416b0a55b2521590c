@@ -1,0 +1,13 @@
+package model;
+
+public class Task {
+	String firstName;
+	String lastName;
+	String phoneNumber;
+	String tagId;
+	String address,
+	String medicalCare;
+	String 
+	// medical care 
+
+}

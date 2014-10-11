@@ -53,4 +53,5 @@
 <fullyQualifiedTypeName name="android.widget.TextView"/>
 <fullyQualifiedTypeName name="com.example.translili.R.id"/>
 <fullyQualifiedTypeName name="android.text.Html"/>
+<fullyQualifiedTypeName name="model.Task"/>
 </qualifiedTypeNameHistroy>
