@@ -177,15 +177,12 @@ public class MainActivity extends Activity implements TaskObsorver,
 					Toast.makeText(this, "Please tap Task-Tags, to see list of Tasks",Toast.LENGTH_LONG).show();
 				} else if (tagUssage.equals("application/task")&& taskStarted == false && taskListed == true) {
 					Tasks task = null;
-				
 					for (Tasks t : this.tasks) {
-						System.out.println(t.getTaskTagID());
 						if (t.getTaskTagID().equalsIgnoreCase(tagId)) {
 							task = t;
-							System.out.println(t.getTaskTagID());
 						}
 					}
-					if(task!=null){
+					if(!task.equals(null)){
 						displayTaskDetail(task);
 					}
 					
