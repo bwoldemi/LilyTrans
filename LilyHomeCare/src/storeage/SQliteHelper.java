@@ -1,7 +1,7 @@
 package storeage;
 
-import model.TaskForOneCustomer;
-import model.Tasks;
+
+import model.Customer;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -45,41 +45,41 @@ public class SQliteHelper extends SQLiteOpenHelper {
 		this.onCreate(db);
 
 	}
-
-	public void add(TaskForOneCustomer clientTask) {
-		StringBuilder tasks= new StringBuilder();
-		for (Tasks t : clientTask.getTasksList()) {
-			tasks.append(t.toString());
-		}
-
-		SQLiteDatabase db = this.getWritableDatabase();
-		ContentValues values = new ContentValues();
-		values.put(CLIENT_NAME, clientTask.getCustomerName());
-		values.put(CAREGIVER, clientTask.getCareGiver());
-		
-		values.put(START_TIME, clientTask.getStartTimeCustomer().toGMTString());
-		values.put(END_TIME, clientTask.getEndTimeCusotmer().toGMTString());
-		values.put(TASK, tasks.toString());
-		db.insert(TABLE_NAME, null, values);
-
-	}
-
-	public String retriveAll() {
-		String query ="SELECT * FROM "+TABLE_NAME;
-		SQLiteDatabase db = this.getWritableDatabase();
-		Cursor cursor=db.rawQuery(query, null);
-		StringBuilder sb=null;
-		if(cursor.moveToFirst()){
-			sb= new StringBuilder();
-			do{
-				sb.append(cursor.getString(0)+". "+ "Client: "+cursor.getString(1)+"<br/>"
-						+"<br/> Caregiver: " + cursor.getString(4)+"<br/>"
-						+"<br/> Time: " + cursor.getString(2)+" - " +cursor.getString(3)+"<br/>"
-						+ cursor.getString(5)+"<br/><br/>");
-			}while(cursor.moveToNext());
-		}
-		
-		return sb.toString();
-	}
+//
+//	public void add(TaskForOneCustomer clientTask) {
+//		StringBuilder tasks= new StringBuilder();
+//		for (Tasks t : clientTask.getTasksList()) {
+//			tasks.append(t.toString());
+//		}
+//
+//		SQLiteDatabase db = this.getWritableDatabase();
+//		ContentValues values = new ContentValues();
+//		values.put(CLIENT_NAME, clientTask.getCustomerName());
+//		values.put(CAREGIVER, clientTask.getCareGiver());
+//		
+//		values.put(START_TIME, clientTask.getStartTimeCustomer().toGMTString());
+//		values.put(END_TIME, clientTask.getEndTimeCusotmer().toGMTString());
+//		values.put(TASK, tasks.toString());
+//		db.insert(TABLE_NAME, null, values);
+//
+//	}
+//
+//	public String retriveAll() {
+//		String query ="SELECT * FROM "+TABLE_NAME;
+//		SQLiteDatabase db = this.getWritableDatabase();
+//		Cursor cursor=db.rawQuery(query, null);
+//		StringBuilder sb=null;
+//		if(cursor.moveToFirst()){
+//			sb= new StringBuilder();
+//			do{
+//				sb.append(cursor.getString(0)+". "+ "Client: "+cursor.getString(1)+"<br/>"
+//						+"<br/> Caregiver: " + cursor.getString(4)+"<br/>"
+//						+"<br/> Time: " + cursor.getString(2)+" - " +cursor.getString(3)+"<br/>"
+//						+ cursor.getString(5)+"<br/><br/>");
+//			}while(cursor.moveToNext());
+//		}
+//		
+//		return sb.toString();
+//	}
 
 }

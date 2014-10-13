@@ -1,0 +1,35 @@
+package server.fi;
+
+import java.util.Vector;
+
+import model.Customer;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+
+
+
+public class Parser {
+	
+	public static Customer parse(String content)throws JSONException {
+		
+		JSONArray jsonArray = new JSONArray(content);
+		Customer task = null;
+		for (int i = 0; i < jsonArray.length(); i++) {
+			task = new Customer();
+			JSONObject object = jsonArray.getJSONObject(i);
+			task.setFirstName(object.getString("FirstName"));
+			task.setLastName(object.getString("LastName"));
+			task.setPhoneNumber(object.getString("PhoneNumber"));
+			task.setTagId(object.getString("TagId"));
+			task.setAddress(object.getString("Address"));
+			if(object.getString("tasks").equalsIgnoreCase("tasks")){
+				
+			}
+		}
+		return task;
+	}
+	
+}

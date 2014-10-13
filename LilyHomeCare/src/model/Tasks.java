@@ -1,86 +1,52 @@
 package model;
 
+import java.util.Date;
+
 public class Tasks {
-	private String firstName;
-	private String lastName;
-	private String phoneNumber;
-	private String tagId;
-	private String address;
-	private String cleaning;
-	private String medicalCare;
-	private String shoppingList;
-	private String other;
-
-	public String getFirstName() {
-		return firstName;
+	private String taskName;
+	private String taskTagID;
+	private String careGiver;
+	private String taskDetail;
+	
+	private Date taskStartingTime=null;
+	private Date taskEndingTime=null;
+	
+	public String getTaskName() {
+		return taskName;
 	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+	public void setTaskName(String taskName) {
+		this.taskName = taskName;
 	}
-
-	public String getLastName() {
-		return lastName;
+	public String getTaskTagID() {
+		return taskTagID;
 	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
+	public void setTaskTagID(String taskTagID) {
+		this.taskTagID = taskTagID;
 	}
-
-	public String getPhoneNumber() {
-		return phoneNumber;
+	public String getCareGiver() {
+		return careGiver;
 	}
-
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
+	public void setCareGiver(String careGiver) {
+		this.careGiver = careGiver;
 	}
-
-	public String getTagId() {
-		return tagId;
+	public String getTaskDetail() {
+		return taskDetail;
 	}
-
-	public void setTagId(String tagId) {
-		this.tagId = tagId;
+	public void setTaskDetail(String taskDetail) {
+		this.taskDetail = taskDetail;
 	}
-
-	public String getAddress() {
-		return address;
+	public Date getTaskStartingTime() {
+		return taskStartingTime;
 	}
-
-	public void setAddress(String address) {
-		this.address = address;
+	public void setTaskStartingTime(Date taskStartingTime) {
+		this.taskStartingTime = taskStartingTime;
 	}
-
-	public String getCleaning() {
-		return cleaning;
+	public Date getTaskEndingTime() {
+		return taskEndingTime;
 	}
-
-	public void setCleaning(String cleaning) {
-		this.cleaning = cleaning;
+	public void setTaskEndingTime(Date taskEndingTime) {
+		this.taskEndingTime = taskEndingTime;
 	}
-
-	public String getMedicalCare() {
-		return medicalCare;
-	}
-
-	public void setMedicalCare(String medicalCare) {
-		this.medicalCare = medicalCare;
-	}
-
-	public String getShoppingList() {
-		return shoppingList;
-	}
-
-	public void setShoppingList(String shoppingList) {
-		this.shoppingList = shoppingList;
-	}
-
-	public String getOther() {
-		return other;
-	}
-
-	public void setOther(String other) {
-		this.other = other;
-	}
-
+	
+	
 }

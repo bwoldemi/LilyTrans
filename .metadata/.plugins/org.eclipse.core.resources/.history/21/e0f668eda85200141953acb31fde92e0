@@ -1,0 +1,8 @@
+package model;
+
+public class Tasks {
+	private String taskName;
+	private String taskTagID;
+	private String careGiver;
+	private Striing taskDetail;
+}

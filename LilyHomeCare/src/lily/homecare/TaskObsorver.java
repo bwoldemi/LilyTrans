@@ -1,5 +1,7 @@
 package lily.homecare;
 
+import java.util.Date;
+
 public interface TaskObsorver {
 	/**
 	 * Task update notifier 
@@ -8,12 +10,12 @@ public interface TaskObsorver {
 	/**
 	 * Task completed notifier 
 	 */
-	public void taskCompleted();
+	public void taskCompleted(Date date);
 	
 	/**
 	 * Task start notifier 
 	 */
-	public void taskStarted();
+	public void taskStarted(Date date);
 	
 	/**
 	 * download completed 

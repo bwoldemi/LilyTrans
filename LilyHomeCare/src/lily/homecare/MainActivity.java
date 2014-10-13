@@ -1,9 +1,11 @@
 package lily.homecare;
 
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
+
+import java.util.Vector;
+
+import model.Customer;
 import model.Tasks;
 import server.fi.Server;
 import storeage.SQliteHelper;
@@ -38,7 +40,8 @@ import android.os.Build;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 
-public class MainActivity extends Activity implements TaskObsorver, OnSharedPreferenceChangeListener {
+public class MainActivity extends Activity implements TaskObsorver,
+		OnSharedPreferenceChangeListener {
 
 	private TextView textViewCustmerName;
 	private TextView textViewCustomerAdress;
@@ -52,8 +55,8 @@ public class MainActivity extends Activity implements TaskObsorver, OnSharedPref
 
 	private String currentTaskTagId = null;
 
-	public List<Tasks> tasks = null;
-
+	public Vector<Tasks> tasks = null;
+	Customer customerTask;
 
 	// NFC access
 	private NfcAdapter mNfcAdapter;
@@ -61,13 +64,13 @@ public class MainActivity extends Activity implements TaskObsorver, OnSharedPref
 
 	// for downloading data from webserver
 	private Server server;
-	
 
 	// database
 	SQliteHelper db;
-	
+
 	// NFC TAG data
 	private String tagId = null;
+
 	SharedPreferences preferences;
 
 	private static final String TAG = MainActivity.class.getName();
@@ -77,7 +80,7 @@ public class MainActivity extends Activity implements TaskObsorver, OnSharedPref
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		//customerTask = new TaskForOneCustomer();
+		// customerTask = new TaskForOneCustomer();
 
 		textViewCustmerName = (TextView) findViewById(R.id.textViewCustomerName);
 		textViewCustomerAdress = (TextView) findViewById(R.id.textViewCustomerAddress);
@@ -93,31 +96,27 @@ public class MainActivity extends Activity implements TaskObsorver, OnSharedPref
 				this.getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 
 		if (mNfcAdapter == null) {
-			Toast.makeText(this, "NFC is not available", Toast.LENGTH_LONG).show();
+			Toast.makeText(this, "NFC is not available", Toast.LENGTH_LONG)
+					.show();
 			finish();
 			return;
 		}
 
 		if (mNfcAdapter.isEnabled() == false) {
-			Toast.makeText(this, "Please Enable NFC Mode", Toast.LENGTH_LONG).show();
+			Toast.makeText(this, "Please Enable NFC Mode", Toast.LENGTH_LONG)
+					.show();
 			finish();
 		}
 
+		// Initializing
 		server = new Server(this);
-		db = new SQliteHelper(this);
 		server.setmObsorver((TaskObsorver) this);
-		if (checkNetwork()) {
-			server.reteriveData();
-		} else {
-			this.error("No Internet Connection");
-		}
-		
-		
+		db = new SQliteHelper(this);
 
 	}
 
 	/**
-	 * Check network connection, return true if Internet is connected connected
+	 * Check network connection, return true if connected
 	 * 
 	 * @return
 	 */
@@ -168,17 +167,27 @@ public class MainActivity extends Activity implements TaskObsorver, OnSharedPref
 
 				tagUssage = type.toString();
 				tagId = data.toString();
-				if (tagUssage.equals("application/door") && taskListed == false&& taskStarted == false) {
-					// will retrieve the tasks from server 
-					
-				} else if (tagUssage.equals("application/door")&& taskListed == true) {
+
+				if (tagUssage.equals("application/door") && taskListed == false && taskStarted == false) {
+					tagId.toString();
+					server.setTagData(tagId);
+					server.retriveData();
+				} else if (tagUssage.equals("application/door") && taskListed == true) {
+					// if user scan door nfc tag twice 
 					Toast.makeText(this, "Please tap Task-Tags, to see list of Tasks",Toast.LENGTH_LONG).show();
-
-				} else if (tagUssage.equals("application/task")	&& taskStarted == false && taskListed == true) {
-				//	displayTaskDetail();
-				
-
-				} else if (tagUssage.equals("application/task")&& taskStarted == true && taskListed == false) {
+				} else if (tagUssage.equals("application/task")&& taskStarted == false && taskListed == true) {
+					Tasks task = null;
+					for (Tasks t : this.tasks) {
+						if (t.getTaskTagID().equalsIgnoreCase(tagId)) {
+							task = t;
+						}
+					}
+					if(!task.equals(null)){
+						displayTaskDetail(task);
+					}
+					
+					
+				} else if (tagUssage.equals("application/task")	&& taskStarted == true && taskListed == false) {
 					// check if it is same tag, if same taskid display dialog
 					// else ask to diplay
 					if (currentTaskTagId.equals(tagId)) {
@@ -193,7 +202,16 @@ public class MainActivity extends Activity implements TaskObsorver, OnSharedPref
 													DialogInterface dialog,
 													int id) {
 
-												
+												Tasks task = null;
+												for (Tasks t : tasks) {
+													if (t.getTaskTagID().equalsIgnoreCase(
+															tagId)) {
+														task = t;
+													}
+												}
+												task.setTaskEndingTime(new Date());
+												listTask();
+
 											}
 										})
 								.setNegativeButton("No",
@@ -213,7 +231,7 @@ public class MainActivity extends Activity implements TaskObsorver, OnSharedPref
 				}
 
 			}
-		}
+		}// last
 
 	}
 
@@ -255,26 +273,19 @@ public class MainActivity extends Activity implements TaskObsorver, OnSharedPref
 
 	}
 
-	public void displayTaskDetail() {
+	public void displayTaskDetail(Tasks task) {
 
-		Tasks task = null;
-		for (Tasks t : this.tasks) {
-			if (t.getTaskId().equals(tagId)) {
-				task = t;
-			}
-		}
-		if (task.getTaskStartTime() != null) {
+		
+		if (task.getTaskStartingTime() != null) {
 
-			Toast.makeText(this, "Task already Done", Toast.LENGTH_SHORT)
-					.show();
-			
+			Toast.makeText(this, "Task already Done/Started", Toast.LENGTH_SHORT).show();
 
 		} else {
 			currentTaskTagId = tagId;
 			this.taskStarted = true;
 			this.taskListed = false;
 
-			task.setTaskStartTime(new Date());
+			task.setTaskStartingTime(new Date());
 			if (task != null) {
 				textviewTaskName.setText(Html.fromHtml("<b> Task Name</b>"
 						+ ": " + task.getTaskName()));
@@ -287,42 +298,46 @@ public class MainActivity extends Activity implements TaskObsorver, OnSharedPref
 	}
 
 	public void listTask() {
+		// clearing text fields
 		reset();
+
 		this.taskStarted = false;
 		this.taskListed = true;
+
 		if (customerTask == null) {
 			return;
 		}
-		
 
 		textViewCustmerName.setText(Html.fromHtml("<b>" + "Customer Name: "
-				+ "</b>" + customerTask.getCustomerName()));
+				+ "</b>" + customerTask.getFirstName() + " "
+				+ customerTask.getLastName()));
 		textViewCustomerAdress.setText(Html.fromHtml("<b>"
-				+ "Customer Adress : " + "</b>"
-				+ customerTask.getCustomerAddress()));
-		if (customerTask.getStartTimeCustomer() != null) {
-			textViewCareGiver.setText(Html.fromHtml("<b>" + "Care Giver Name:"
-					+ "</b>" + customerTask.getCareGiver()
+				+ "Customer Adress : " + "</b>" + customerTask.getAddress()));
+		if (customerTask.getStartTime() != null) {
+			textViewCareGiver.setText(Html.fromHtml("<b>"
 					+ "<br/><b>Task Started: </b>"
-					+ customerTask.getStartTimeCustomer().toLocaleString()));
-		} else {
-			textViewCareGiver.setText(Html.fromHtml("<b>" + "Care Giver Name:"
-					+ "</b>" + customerTask.getCareGiver()));
+					+ customerTask.getStartTime().toString()));
 		}
 
-		List<Tasks> tasks = customerTask.getTasksList();
+		// was it necessary ?
+		// else {
+		// textViewCareGiver.setText(Html.fromHtml("<b>" +
+		// "Care Giver Name:"
+		// + "</b>" + customerTask.getCareGiver()));
+		// }
+
 		if (tasks != null) {
 
 			for (int i = 0; i < tasks.size(); i++) {
-				if (tasks.get(i).getTaskStartTime() == null) {
+				if (tasks.get(i).getTaskStartingTime() == null) {
 					textViewTaskDetail.append(Html.fromHtml(Integer
 							.toString(i + 1)
 							+ "."
 							+ tasks.get(i).getTaskName()
 							+ "    "
 							+ "<font color='red'>Waiting</font><br/><br/>"));
-				} else if (tasks.get(i).getTaskStartTime() != null
-						&& tasks.get(i).getTaskEndTime() == null) {
+				} else if (tasks.get(i).getTaskStartingTime() != null
+						&& tasks.get(i).getTaskEndingTime() == null) {
 					textViewTaskDetail.append(Html.fromHtml(Integer
 							.toString(i + 1)
 							+ "."
@@ -330,10 +345,11 @@ public class MainActivity extends Activity implements TaskObsorver, OnSharedPref
 							+ "    "
 							+ "<font color='green'>Started</font><br/><br/>"));
 				} else {
-					SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
-					String startTime = sdf.format(tasks.get(i)
-							.getTaskStartTime());
-					String endTime = sdf.format(tasks.get(i).getTaskEndTime());
+					String startTime = DateFormat.format("hh:mm a",
+							tasks.get(i).getTaskStartingTime()).toString();
+					String endTime = DateFormat.format("hh:mm a",
+							tasks.get(i).getTaskEndingTime()).toString();
+
 					textViewTaskDetail
 							.append(Html.fromHtml(Integer.toString(i + 1) + "."
 									+ tasks.get(i).getTaskName() + "    "
@@ -345,19 +361,19 @@ public class MainActivity extends Activity implements TaskObsorver, OnSharedPref
 		}
 
 		if (isAllTasksCompleted()) {
-			customerTask.setEndTimeCusotmer(new Date());
+			customerTask.setFinishingTime(new Date());
 			String startTime = DateFormat.format("h:mm a",
-					customerTask.getStartTimeCustomer()).toString();
+					customerTask.getStartTime()).toString();
 			String endTime = DateFormat.format("h:mm a",
-					customerTask.getEndTimeCusotmer()).toString();
+					customerTask.getFinishingTime()).toString();
 
 			textViewTaskReview.setText(Html.fromHtml("Task Completed" + "<br/>"
 					+ "<font style='yellow'>" + startTime + " - " + endTime
 					+ "</font>"));
 
-			this.taskCompleted();
-
+			this.taskCompleted(new Date());
 		}
+
 	}
 
 	public void enableForeGround() {
@@ -377,12 +393,12 @@ public class MainActivity extends Activity implements TaskObsorver, OnSharedPref
 	// initialize
 	public void initialize() {
 
-		customerTask.setStartTimeCustomer(null);
-		customerTask.setEndTimeCusotmer(null);
+		customerTask.setStartTime(null);
+		customerTask.setFinishingTime(null);
 
 		for (Tasks t : tasks) {
-			t.setTaskEndTime(null);
-			t.setTaskStartTime(null);
+			t.setTaskStartingTime(null);
+			t.setTaskEndingTime(null);
 		}
 		taskListed = false;
 		taskStarted = false;
@@ -405,20 +421,24 @@ public class MainActivity extends Activity implements TaskObsorver, OnSharedPref
 	}
 
 	@Override
-	public void taskCompleted() {
-		db.add(customerTask);
+	public void taskCompleted(Date date) {
+		//db.add(customerTask);
 		initialize();
 	}
 
 	@Override
-	public void taskStarted() {
+	public void taskStarted(Date date) {
+		customerTask.setStartTime(date);
+		listTask();
+		taskListed = true;
 	}
 
 	@Override
 	public void downloadCompleted() {
-		taskContainer.addTasks(server.getTasks());
-		Toast.makeText(this, "Download Completed! ", Toast.LENGTH_SHORT)
-				.show();
+
+		customerTask = server.getTasks();
+		tasks = customerTask.getTasks();
+		this.taskStarted(new Date());
 	}
 
 	@Override
@@ -431,7 +451,7 @@ public class MainActivity extends Activity implements TaskObsorver, OnSharedPref
 			return false;
 		}
 		for (Tasks t : tasks) {
-			if (t.getTaskEndTime() == null) {
+			if (t.getTaskEndingTime() == null) {
 				return false;
 			}
 		}
@@ -442,7 +462,7 @@ public class MainActivity extends Activity implements TaskObsorver, OnSharedPref
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
-		getMenuInflater().inflate(R.menu.lilimain, menu);
+		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
 
@@ -451,27 +471,26 @@ public class MainActivity extends Activity implements TaskObsorver, OnSharedPref
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			Intent intent = new Intent(this, SettingsActivity.class);
-			startActivity(intent);
-			return true;
-		}else if(id ==R.id.history){
-			Intent intent = new Intent(this, History.class);
-			String history =db.retriveAll();
-			intent.putExtra("history", history);
-			startActivity(intent);
-			return true;
-		}
+//		int id = item.getItemId();
+//		if (id == R.id.action_settings) {
+//			Intent intent = new Intent(this, SettingsActivity.class);
+//			startActivity(intent);
+//			return true;
+//		} else if (id == R.id.history) {
+//			Intent intent = new Intent(this, History.class);
+//			String history = db.retriveAll();
+//			intent.putExtra("history", history);
+//			startActivity(intent);
+//			return true;
+//		}
 		return super.onOptionsItemSelected(item);
 	}
 
-	 
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

@@ -1,39 +1,46 @@
 package server.fi;
 
-import java.util.Vector;
-
+import model.Customer;
 import model.Tasks;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
-
-
 public class Parser {
-	
-	public static Vector<Tasks> parse(String content)throws JSONException {
-		Vector<Tasks> tasks = new Vector<Tasks>();
 
-		JSONArray jsonArray = new JSONArray(content);
+	public static Customer parse(String content) throws JSONException {
+
+		Customer customerTask = null;
 		Tasks task;
-		for (int i = 0; i < jsonArray.length(); i++) {
-			task = new Tasks();
-			JSONObject object = jsonArray.getJSONObject(i);
+		JSONObject userObject = new JSONObject(content);
+		if (!userObject.optString("0").equals("")) {
+			customerTask = new Customer();
+			JSONObject object = new JSONObject(userObject.optString("0"));
+			customerTask.setFirstName(object.getString("FirstName"));
+			customerTask.setLastName(object.getString("LastName"));
+			customerTask.setPhoneNumber(object.getString("PhoneNumber"));
+			customerTask.setTagId(object.getString("TagId"));
+			customerTask.setAddress(object.getString("Address"));
 			
-			task.setFirstName(object.getString("FirstName"));
-			task.setLastName(object.getString("LastName"));
-			task.setPhoneNumber(object.getString("PhoneNumber"));
-			task.setTagId(object.getString("TagId"));
-			task.setAddress(object.getString("Address"));
-			task.setCleaning(object.getString("Cleaning"));
-			task.setMedicalCare(object.getString("MedicalCare"));
-			task.setShoppingList(object.getString("ShoppingList"));
-			task.setOther(object.getString("Other"));
-			tasks.add(task);
+			
+			if (!userObject.optString("tasks").equalsIgnoreCase("")) {
+				JSONArray array = new JSONArray(userObject.getString("tasks"));
+
+				for (int i = 0; i < array.length(); i++) {
+					task = new Tasks();
+					JSONObject taskObject = array.getJSONObject(i);
+					task.setTaskName(taskObject.getString("TaskName"));
+					task.setTaskTagID(taskObject.getString("TaskTagID"));
+					task.setCareGiver(taskObject.getString("CareGiver"));
+					task.setTaskDetail(taskObject.getString("TaskDetail"));
+					customerTask.add(task);
+				}
+
+			}
 		}
-		return tasks;
+
+		return customerTask;
 	}
-	
+
 }
