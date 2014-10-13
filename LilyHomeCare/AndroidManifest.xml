@@ -26,8 +26,20 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".History"
+            android:name="menuActivities.History"
             android:label="@string/title_activity_history" >
+        </activity>
+        <activity
+            android:name="menuActivities.Help"
+            android:label="@string/title_activity_help" >
+        </activity>
+        <activity
+            android:name="menuActivities.Read"
+            android:label="@string/title_activity_read" >
+        </activity>
+        <activity
+            android:name="menuActivities.Write"
+            android:label="@string/title_activity_write" >
         </activity>
     </application>
 

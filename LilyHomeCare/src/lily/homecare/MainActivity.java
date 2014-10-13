@@ -5,21 +5,22 @@ import java.util.Date;
 
 import java.util.Vector;
 
+import menuActivities.Help;
+import menuActivities.History;
+import menuActivities.Read;
+import menuActivities.Write;
 import model.Customer;
 import model.Tasks;
 import server.fi.Server;
 import storeage.SQliteHelper;
 import android.app.Activity;
-
 import android.app.AlertDialog;
-
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.nfc.NdefMessage;
@@ -30,18 +31,13 @@ import android.os.Parcelable;
 import android.text.Html;
 import android.text.format.DateFormat;
 import android.util.Log;
-
 import android.view.Menu;
 import android.view.MenuItem;
-
 import android.widget.TextView;
 import android.widget.Toast;
-import android.os.Build;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 
-public class MainActivity extends Activity implements TaskObsorver,
-		OnSharedPreferenceChangeListener {
+
+public class MainActivity extends Activity implements TaskObsorver{
 
 	private TextView textViewCustmerName;
 	private TextView textViewCustomerAdress;
@@ -73,7 +69,7 @@ public class MainActivity extends Activity implements TaskObsorver,
 
 	SharedPreferences preferences;
 
-	private static final String TAG = MainActivity.class.getName();
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -299,7 +295,9 @@ public class MainActivity extends Activity implements TaskObsorver,
 		}
 
 	}
-
+	/**
+	 * Listing tasks On main screen 
+	 */
 	public void listTask() {
 		// clearing text fields
 		reset();
@@ -464,36 +462,37 @@ public class MainActivity extends Activity implements TaskObsorver,
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-//		int id = item.getItemId();
-//		if (id == R.id.action_settings) {
-//			Intent intent = new Intent(this, SettingsActivity.class);
-//			startActivity(intent);
-//			return true;
-//		} else if (id == R.id.history) {
-//			Intent intent = new Intent(this, History.class);
-//			String history = db.retriveAll();
-//			intent.putExtra("history", history);
-//			startActivity(intent);
-//			return true;
-//		}
+
+		int id = item.getItemId();
+		if (id == R.id.help) {
+			Intent intent = new Intent(this, Help.class);
+			startActivity(intent);
+			return true;
+		} else if (id == R.id.about) {
+			// show dialog 
+			return true;
+		}else if(id == R.id.nfc_read){
+			Intent intent = new Intent(this, Read.class);
+			startActivity(intent);
+			return true;
+		}else if(id == R.id.nfc_writer){
+			Intent intent = new Intent(this, Write.class);
+			startActivity(intent);
+			return true;
+		}else if(id == R.id.archive){
+			Intent intent = new Intent(this, History.class);
+			startActivity(intent);
+			return true;
+		}
 		return super.onOptionsItemSelected(item);
 	}
 
-	@Override
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-			String key) {
-		// TODO Auto-generated method stub
-
-	}
+	
 
 }
