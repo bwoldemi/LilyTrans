@@ -1,0 +1,59 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0666FF"
+    android:orientation="vertical"
+    tools:context="lili.oulu.fi.MainActivity"
+    tools:ignore="MergeRootFrame" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10sp"
+        android:text="@string/enter_your_data"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/editTextMessage"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10sp"
+        android:hint="@string/hint_enter_your_data"
+        android:inputType="text"
+        android:textColor="#FFFFFF" />
+
+    <RadioGroup
+        android:id="@+id/radioGroupOptions"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/door"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onRadioButtonClicked"
+            android:text="@string/door_tag"
+            android:textColor="#FFFFFF" />
+
+        <RadioButton
+            android:id="@+id/task"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onRadioButtonClicked"
+            android:text="@string/task_tag"
+            android:textColor="#FFFFFF" />
+    </RadioGroup>
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="writeOnTag"
+        android:text="@string/tagWriterText"
+        android:textColor="#FFFFFF" />
+
+</LinearLayout>

@@ -9,6 +9,7 @@ import menuActivities.Help;
 import menuActivities.History;
 import menuActivities.Read;
 import menuActivities.Write;
+import menuActivities.Writer;
 import model.Customer;
 import model.Tasks;
 import server.fi.Server;
@@ -482,7 +483,7 @@ public class MainActivity extends Activity implements TaskObsorver{
 			startActivity(intent);
 			return true;
 		}else if(id == R.id.nfc_writer){
-			Intent intent = new Intent(this, Write.class);
+			Intent intent = new Intent(this, Writer.class);
 			startActivity(intent);
 			return true;
 		}else if(id == R.id.archive){

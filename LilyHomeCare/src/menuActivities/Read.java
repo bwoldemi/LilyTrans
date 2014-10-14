@@ -1,18 +1,13 @@
 package menuActivities;
 
 import lily.homecare.R;
-import lily.homecare.R.id;
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
-
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.net.NetworkInfo.DetailedState;
 import android.nfc.FormatException;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
@@ -125,25 +120,7 @@ public class Read extends Activity {
 		else if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
 			Log.d("ACTION_TYPE", "ACTION_TAG_DISCOVERED");
 			textViewType.setText("Tag Discovered");
-			String type= intent.getType();
-//			if(type!=null){
-//				textViewContent.setText(type);
-//			}else {
-//				textViewContent.setText("Null");
-//			}
-			
-//			Parcelable[] rawData = intent.getParcelableArrayExtra(NfcAdapter.ACTION_TAG_DISCOVERED);
-//			NdefMessage nMsg = (NdefMessage)rawData[0];
-//			textViewContent.setText(new String(nMsg.getRecords()[0].getPayload()));
-//			if (parcelable == null) {
-//				Log.d("Parcable", "null");
-//
-//			} else {
-//				for (Parcelable p : parcelable) {
-//					Log.d("id Parcable", p.toString());
-//				}
-//			}
-			
+						
 			Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 			NfcTagInfo tagInfo;
 			try {
@@ -258,23 +235,14 @@ public class Read extends Activity {
 	        
 	        byte[] payload = record.getPayload();
 	        
-	        // Get the Text Encoding
-	        String textEncoding = ((payload[0] & 128) == 0) ? "UTF-8" : "UTF-16";
-	 
-	        // Get the Language Code
-	      //  int languageCodeLength = payload[0] & 0063;
-	         
-	        // String languageCode = new String(payload, 1, languageCodeLength, "US-ASCII");
-	        // e.g. "en"
-	         
-	        // Get the Text
+	     
 	        return new String(payload);
 	    }
 	     
 	    @Override
 	    protected void onPostExecute(String result) {
 	        if (result != null) {
-	        	textViewContent.setText("Read content: " + result);
+	        	textViewContent.setText("content: " + result);
 	        }
 	    }
 	}

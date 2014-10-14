@@ -13,12 +13,16 @@
     <string name="Nfc_Read">Read </string>
     <string name="archive">archive</string>
     <string name="title_activity_help">Help</string>
-    <string name="title_activity_read">Read</string>
+    <string name="title_activity_read">Ready to Read NFC TAG</string>
     <string name="title_activity_write">Write</string>
     <string name="tagReader">Tag Reader</string>
     <string name="tagWriter">Tag Writer</string>
     <string name="tagReaderText">TAG READER</string>
     <string name="tagWriterText">Write on Tag</string>
     <string name="tag_writer">Please Move Your Phone To NFC Tag</string>
-
+    <string name="title_activity_writer">Writer</string>
+    <string name="enter_your_data">Enter your data </string>
+    <string name="hint_enter_your_data">e.g TAG001</string>
+	<string name="door_tag">Door Tag </string>
+	<string name="task_tag">In house Tag </string>
 </resources>
