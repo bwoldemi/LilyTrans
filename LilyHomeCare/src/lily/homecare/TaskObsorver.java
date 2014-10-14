@@ -26,4 +26,10 @@ public interface TaskObsorver {
 	 * error notifier 
 	 */
 	public void error(String text);
+	
+	/**
+	 * will be called when download completed 
+	 */
+	
+	public void downloadingStarted();
 }

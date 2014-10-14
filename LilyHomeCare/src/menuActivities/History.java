@@ -6,29 +6,20 @@ import lily.homecare.R.layout;
 import lily.homecare.R.menu;
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 public class History extends Activity {
-
+	TextView textViewHistory;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_history);
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.history, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
+		textViewHistory= (TextView)findViewById(R.id.textViewHistory);
+		textViewHistory.setMovementMethod(new ScrollingMovementMethod());
+		textViewHistory.setText(Html.fromHtml(getIntent().getExtras().getString("history", "No History")));
 	}
 }

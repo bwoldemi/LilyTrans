@@ -1,9 +1,7 @@
 package menuActivities;
 
 import lily.homecare.R;
-import lily.homecare.R.id;
-import lily.homecare.R.layout;
-import lily.homecare.R.menu;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;

@@ -25,30 +25,31 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int about=0x7f080014;
-        public static final int action_settings=0x7f080012;
-        public static final int archive=0x7f080017;
+        public static final int about=0x7f080015;
+        public static final int action_settings=0x7f080013;
+        public static final int archive=0x7f080018;
         public static final int container=0x7f080000;
-        public static final int door=0x7f080010;
-        public static final int editTextMessage=0x7f08000e;
-        public static final int help=0x7f080013;
-        public static final int message=0x7f08000b;
-        public static final int nfc_read=0x7f080015;
-        public static final int nfc_writer=0x7f080016;
-        public static final int radioGroupOptions=0x7f08000f;
-        public static final int task=0x7f080011;
-        public static final int textViewCareGiver=0x7f080003;
-        public static final int textViewContent=0x7f080009;
-        public static final int textViewCustomerAddress=0x7f080002;
-        public static final int textViewCustomerName=0x7f080001;
-        public static final int textViewData=0x7f08000c;
-        public static final int textViewOther=0x7f08000a;
-        public static final int textViewSize=0x7f080008;
-        public static final int textViewStatus=0x7f08000d;
-        public static final int textViewTaskDetail=0x7f080005;
-        public static final int textViewTaskName=0x7f080004;
-        public static final int textViewTaskReview=0x7f080006;
-        public static final int textViewType=0x7f080007;
+        public static final int door=0x7f080011;
+        public static final int editTextMessage=0x7f08000f;
+        public static final int help=0x7f080014;
+        public static final int message=0x7f08000c;
+        public static final int nfc_read=0x7f080016;
+        public static final int nfc_writer=0x7f080017;
+        public static final int radioGroupOptions=0x7f080010;
+        public static final int task=0x7f080012;
+        public static final int textViewCareGiver=0x7f080004;
+        public static final int textViewContent=0x7f08000a;
+        public static final int textViewCustomerAddress=0x7f080003;
+        public static final int textViewCustomerName=0x7f080002;
+        public static final int textViewData=0x7f08000d;
+        public static final int textViewHistory=0x7f080001;
+        public static final int textViewOther=0x7f08000b;
+        public static final int textViewSize=0x7f080009;
+        public static final int textViewStatus=0x7f08000e;
+        public static final int textViewTaskDetail=0x7f080006;
+        public static final int textViewTaskName=0x7f080005;
+        public static final int textViewTaskReview=0x7f080007;
+        public static final int textViewType=0x7f080008;
     }
     public static final class layout {
         public static final int activity_help=0x7f030000;
@@ -71,6 +72,7 @@ public final class R {
         public static final int Nfc_Read=0x7f050009;
         public static final int Nfc_write=0x7f050008;
         public static final int about=0x7f050006;
+        public static final int about_lily=0x7f050018;
         public static final int action_settings=0x7f050002;
         public static final int app_name=0x7f050000;
         public static final int archive=0x7f05000a;

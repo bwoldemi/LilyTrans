@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+
+import lily.homecare.MainActivity;
 import lily.homecare.TaskObsorver;
 import model.Customer;
 import org.apache.http.HttpEntity;
@@ -32,38 +34,35 @@ public class Server implements TaskDataDownloder {
 	private Customer tasks = null;
 	private Context context = null;
 	private final static String url = "http://tutbereket.net/lily_homecare/get_data_nfc_tag_id.php";
-	TaskObsorver mObsorver;
-	String tagData;
+	private TaskObsorver mObsorver;
+	private String tagData;
+
 	/**
-	 * Constructor 
+	 * Constructor
+	 * 
 	 * @param context
 	 */
-	public Server(Context context ) {
+	public Server(Context context) {
 		context = this.context;
 	}
-	
-	
+
 	@Override
 	public void retriveData() {
-		new DownLoader().execute(url,tagData);
+		new DownLoader().execute(url, tagData);
 	}
 
 	@Override
 	public void uploadData() {
 		// TODO Auto-generated method stub
 	}
-	
-	
 
 	public void setmObsorver(TaskObsorver mObsorver) {
 		this.mObsorver = mObsorver;
 	}
 
-
 	public void setTagData(String tagData) {
 		this.tagData = tagData;
 	}
-
 
 	public boolean checkNetwork() {
 		ConnectivityManager connMgr = (ConnectivityManager) context
@@ -76,16 +75,15 @@ public class Server implements TaskDataDownloder {
 		return false;
 	}
 
-	
 	/**
-	 * getting tasks 
+	 * getting tasks
+	 * 
 	 * @return
 	 */
-		
+
 	public Customer getTasks() {
 		return tasks;
 	}
-
 
 	/**
 	 * Request available transports, by day, starting point and destination
@@ -95,13 +93,10 @@ public class Server implements TaskDataDownloder {
 	 * 
 	 */
 	private class DownLoader extends AsyncTask<String, Void, String> {
-		ProgressDialog progressDialog;
-
-		@Override
+		
+		 @Override
 		protected void onPreExecute() {
-			super.onPreExecute();
-//			progressDialog=new ProgressDialog(context);
-//			progressDialog = ProgressDialog.show(context,"Downloding", "Retriving customer data ");
+			mObsorver.downloadingStarted();
 		}
 
 		@Override
@@ -109,14 +104,14 @@ public class Server implements TaskDataDownloder {
 			// TODO Auto-generated method stub
 			String content = null;
 			try {
-				
+
 				DefaultHttpClient httpClient = new DefaultHttpClient();
 				HttpPost httpPost = new HttpPost(params[0]);
 				List<NameValuePair> nameValuePaire = new ArrayList<NameValuePair>(
 						1);
 
 				nameValuePaire.add(new BasicNameValuePair("tagId", params[1]));
-						
+
 				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePaire));
 
 				HttpResponse httpResponse = httpClient.execute(httpPost);
@@ -143,10 +138,10 @@ public class Server implements TaskDataDownloder {
 
 		@Override
 		protected void onPostExecute(String result) {
-//			progressDialog.dismiss();
+		//	super.onPostExecute(result);
 			System.out.println(result);
 			try {
-				tasks= Parser.parse(result);
+				tasks = Parser.parse(result);
 				mObsorver.downloadCompleted();
 			} catch (JSONException e) {
 				mObsorver.error(" Error Occured During Parsing, ");

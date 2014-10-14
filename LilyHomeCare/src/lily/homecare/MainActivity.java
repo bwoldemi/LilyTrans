@@ -1,14 +1,10 @@
 package lily.homecare;
 
-
 import java.util.Date;
-
 import java.util.Vector;
-
 import menuActivities.Help;
 import menuActivities.History;
 import menuActivities.Read;
-import menuActivities.Write;
 import menuActivities.Writer;
 import model.Customer;
 import model.Tasks;
@@ -17,6 +13,7 @@ import storeage.SQliteHelper;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -32,13 +29,13 @@ import android.os.Parcelable;
 import android.text.Html;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-public class MainActivity extends Activity implements TaskObsorver{
+public class MainActivity extends Activity implements TaskObsorver {
 
 	private TextView textViewCustmerName;
 	private TextView textViewCustomerAdress;
@@ -47,30 +44,28 @@ public class MainActivity extends Activity implements TaskObsorver{
 	private TextView textViewTaskDetail;
 	private TextView textViewTaskReview;
 
-	boolean taskListed = false;
-	boolean taskStarted = false;
+	private boolean taskListed = false;
+	private boolean taskStarted = false;
 
 	private String currentTaskTagId = null;
 
-	public Vector<Tasks> tasks = null;
-	Customer customerTask;
+	private Vector<Tasks> tasks = null;
+	private Customer customerTask;
 
 	// NFC access
 	private NfcAdapter mNfcAdapter;
 	private PendingIntent nfcPendingIntent;
 
-	// for downloading data from webserver
+	// for downloading data from web server
 	private Server server;
 
 	// database
-	SQliteHelper db;
+	private SQliteHelper db;
 
 	// NFC TAG data
 	private String tagId = null;
-
+	ProgressDialog progressDialog;
 	SharedPreferences preferences;
-
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -78,14 +73,13 @@ public class MainActivity extends Activity implements TaskObsorver{
 		setContentView(R.layout.activity_main);
 
 		// customerTask = new TaskForOneCustomer();
-
 		textViewCustmerName = (TextView) findViewById(R.id.textViewCustomerName);
 		textViewCustomerAdress = (TextView) findViewById(R.id.textViewCustomerAddress);
 		textViewCareGiver = (TextView) findViewById(R.id.textViewCareGiver);
-
 		textviewTaskName = (TextView) findViewById(R.id.textViewTaskName);
 		textViewTaskDetail = (TextView) findViewById(R.id.textViewTaskDetail);
 		textViewTaskReview = (TextView) findViewById(R.id.textViewTaskReview);
+		progressDialog= new ProgressDialog(this);
 
 		// getting NFC service
 		mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -95,18 +89,15 @@ public class MainActivity extends Activity implements TaskObsorver{
 		if (mNfcAdapter == null) {
 			Toast.makeText(this, "NFC is not available", Toast.LENGTH_LONG)
 					.show();
-			finish();
 			return;
 		}
 
 		if (mNfcAdapter.isEnabled() == false) {
 			Toast.makeText(this, "Please Enable NFC Mode", Toast.LENGTH_LONG)
 					.show();
-			finish();
 		}
-
 		// Initializing
-		server = new Server(this);
+		server = new Server((Context)this);
 		server.setmObsorver((TaskObsorver) this);
 		db = new SQliteHelper(this);
 
@@ -165,16 +156,21 @@ public class MainActivity extends Activity implements TaskObsorver{
 				tagUssage = type.toString();
 				tagId = data.toString();
 
-				if (tagUssage.equals("application/door") && taskListed == false && taskStarted == false) {
+				if (tagUssage.equals("application/door") && taskListed == false
+						&& taskStarted == false) {
 					tagId.toString();
 					server.setTagData(tagId);
 					server.retriveData();
-				} else if (tagUssage.equals("application/door") && taskListed == true) {
-					// if user scan door nfc tag twice 
-					Toast.makeText(this, "Please tap Task-Tags, to see list of Tasks",Toast.LENGTH_LONG).show();
-				} else if (tagUssage.equals("application/task")&& taskStarted == false && taskListed == true) {
+				} else if (tagUssage.equals("application/door")
+						&& taskListed == true) {
+					// if user scan door nfc tag twice
+					Toast.makeText(this,
+							"Please tap Task-Tags, to see list of Tasks",
+							Toast.LENGTH_LONG).show();
+				} else if (tagUssage.equals("application/task")
+						&& taskStarted == false && taskListed == true) {
 					Tasks task = null;
-				
+
 					for (Tasks t : this.tasks) {
 						System.out.println(t.getTaskTagID());
 						if (t.getTaskTagID().equalsIgnoreCase(tagId)) {
@@ -182,12 +178,12 @@ public class MainActivity extends Activity implements TaskObsorver{
 							System.out.println(t.getTaskTagID());
 						}
 					}
-					if(task!=null){
+					if (task != null) {
 						displayTaskDetail(task);
 					}
-					
-					
-				} else if (tagUssage.equals("application/task")	&& taskStarted == true && taskListed == false) {
+
+				} else if (tagUssage.equals("application/task")
+						&& taskStarted == true && taskListed == false) {
 					// check if it is same tag, if same taskid display dialog
 					// else ask to diplay
 					if (currentTaskTagId.equals(tagId)) {
@@ -204,8 +200,9 @@ public class MainActivity extends Activity implements TaskObsorver{
 
 												Tasks task = null;
 												for (Tasks t : tasks) {
-													if (t.getTaskTagID().equalsIgnoreCase(
-															tagId)) {
+													if (t.getTaskTagID()
+															.equalsIgnoreCase(
+																	tagId)) {
 														task = t;
 													}
 												}
@@ -272,13 +269,16 @@ public class MainActivity extends Activity implements TaskObsorver{
 		return message;
 
 	}
-
+ /**
+  * displaying detail task 
+  * @param task
+  */
 	public void displayTaskDetail(Tasks task) {
 
-		
 		if (task.getTaskStartingTime() != null) {
 
-			Toast.makeText(this, "Task already Done/Started", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Task already Done/Started",
+					Toast.LENGTH_SHORT).show();
 
 		} else {
 			currentTaskTagId = tagId;
@@ -296,8 +296,9 @@ public class MainActivity extends Activity implements TaskObsorver{
 		}
 
 	}
+
 	/**
-	 * Listing tasks On main screen 
+	 * Listing tasks On main screen
 	 */
 	public void listTask() {
 		// clearing text fields
@@ -320,13 +321,6 @@ public class MainActivity extends Activity implements TaskObsorver{
 					+ "<br/><b>Task Started: </b>"
 					+ customerTask.getStartTime().toString()));
 		}
-
-		// was it necessary ?
-		// else {
-		// textViewCareGiver.setText(Html.fromHtml("<b>" +
-		// "Care Giver Name:"
-		// + "</b>" + customerTask.getCareGiver()));
-		// }
 
 		if (tasks != null) {
 
@@ -377,7 +371,7 @@ public class MainActivity extends Activity implements TaskObsorver{
 		}
 
 	}
-
+	
 	public void enableForeGround() {
 		IntentFilter ndefIntentFilter = new IntentFilter(
 				NfcAdapter.ACTION_NDEF_DISCOVERED);
@@ -392,7 +386,9 @@ public class MainActivity extends Activity implements TaskObsorver{
 
 	}
 
-	// initialize
+	/**
+	 * initialize the text fields and variables  
+	 */
 	public void initialize() {
 
 		customerTask.setStartTime(null);
@@ -406,7 +402,9 @@ public class MainActivity extends Activity implements TaskObsorver{
 		taskStarted = false;
 
 	}
-
+	/**
+	 * reseting text fields 
+	 */
 	public void reset() {
 		textViewCustmerName.setText("");
 		textViewCustomerAdress.setText("");
@@ -424,7 +422,7 @@ public class MainActivity extends Activity implements TaskObsorver{
 
 	@Override
 	public void taskCompleted(Date date) {
-		//db.add(customerTask);
+		// db.add(customerTask);
 		initialize();
 	}
 
@@ -437,7 +435,7 @@ public class MainActivity extends Activity implements TaskObsorver{
 
 	@Override
 	public void downloadCompleted() {
-
+		progressDialog.dismiss();
 		customerTask = server.getTasks();
 		tasks = customerTask.getTasks();
 		this.taskStarted(new Date());
@@ -476,17 +474,29 @@ public class MainActivity extends Activity implements TaskObsorver{
 			startActivity(intent);
 			return true;
 		} else if (id == R.id.about) {
-			// show dialog 
+			AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+			dialog.setTitle("About Lily Homecare");
+			String about= getString(R.string.about_lily);
+			dialog.setMessage(Html.fromHtml(about));
+			dialog.setPositiveButton("Close",
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							dialog.cancel();
+						}
+					});
+			dialog.setCancelable(false);
+			AlertDialog alertDialog = dialog.create();
+			alertDialog.show();
 			return true;
-		}else if(id == R.id.nfc_read){
+		} else if (id == R.id.nfc_read) {
 			Intent intent = new Intent(this, Read.class);
 			startActivity(intent);
 			return true;
-		}else if(id == R.id.nfc_writer){
+		} else if (id == R.id.nfc_writer) {
 			Intent intent = new Intent(this, Writer.class);
 			startActivity(intent);
 			return true;
-		}else if(id == R.id.archive){
+		} else if (id == R.id.archive) {
 			Intent intent = new Intent(this, History.class);
 			startActivity(intent);
 			return true;
@@ -494,6 +504,12 @@ public class MainActivity extends Activity implements TaskObsorver{
 		return super.onOptionsItemSelected(item);
 	}
 
-	
+	@Override
+	public void downloadingStarted() {
+		progressDialog.setTitle("Downloading");
+		progressDialog.setMessage("Retriving Data ...");
+		progressDialog.show();
+		
+	}
 
 }
