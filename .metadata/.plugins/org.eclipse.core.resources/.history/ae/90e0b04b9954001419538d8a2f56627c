@@ -1,0 +1,164 @@
+package com.example.translili;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+
+
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+
+public class PostRideActivity extends Activity {
+	private EditText editTextServiceProvider;
+	private EditText editTextTaxiID;
+	private EditText editTextStartingPoint;
+	private EditText editTextDestinationPoint;
+	private EditText editTextNumberOfPerson;
+	private EditText editTextPhoneNumber;
+	private EditText editTextComment;
+	private Button buttonTime;
+	private Button buttonDate;
+	public final static String POST_URL = "http://tutbereket.net//LiliTransport/insert_rides.php";
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_post_ride);
+		editTextServiceProvider = (EditText) findViewById(R.id.service_provider_post);
+		editTextTaxiID = (EditText) findViewById(R.id.taxi_id_post);
+		editTextStartingPoint = (EditText) findViewById(R.id.starting_point_post);
+		editTextDestinationPoint = (EditText) findViewById(R.id.destination_point_post);
+		editTextNumberOfPerson = (EditText) findViewById(R.id.number_of_person_post);
+		editTextPhoneNumber = (EditText) findViewById(R.id.phone_number_post);
+		editTextComment = (EditText) findViewById(R.id.coment_post);
+		buttonTime = (Button) findViewById(R.id.time_picker_post);
+		buttonDate = (Button) findViewById(R.id.date_picker_post);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.post_ride, menu);
+		return true;
+	}
+
+	public void ResetFields() {
+
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+		if (id == R.id.action_settings) {
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	public void isFormField() {
+
+	}
+
+	public void postRide(View view) {
+		String serviceProvider = editTextServiceProvider.getText().toString();
+		String taxiId = editTextTaxiID.getText().toString();
+		String startingPoint = editTextStartingPoint.getText().toString();
+		String destination = editTextDestinationPoint.getText().toString();
+		String numberOfPerson = editTextNumberOfPerson.getText().toString();
+		String phoneNumber = editTextPhoneNumber.getText().toString();
+		String comment = editTextComment.getText().toString();
+		String pickUpTime = buttonTime.getText().toString();
+		String date = buttonDate.getText().toString();
+		
+		new PostRidesAsynckTask().execute(serviceProvider, taxiId,
+				startingPoint, destination,phoneNumber, pickUpTime, date, numberOfPerson,
+				comment);
+
+	}
+
+	private class PostRidesAsynckTask extends AsyncTask<String, Void, String> {
+		ProgressDialog progressDialog;
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			progressDialog = ProgressDialog.show(PostRideActivity.this,
+					"Saving", "Saving....");
+		}
+
+		@Override
+		protected String doInBackground(String... params) {
+			// TODO Auto-generated method stub
+			String content = null;
+			try {
+				
+				System.out.println(params[0]);
+				// get the first argument passed to the execute method
+			
+				
+				List<NameValuePair> nameValuePaire = new ArrayList<NameValuePair>(9);
+				
+				nameValuePaire.add(new BasicNameValuePair("name",params[0]));
+				nameValuePaire.add(new BasicNameValuePair("id", params[1]));
+				nameValuePaire.add(new BasicNameValuePair("starting", params[2]));
+				nameValuePaire.add(new BasicNameValuePair("destination", params[3]));
+				nameValuePaire.add(new BasicNameValuePair("phonenumber", params[4]));
+				nameValuePaire.add(new BasicNameValuePair("time", params[5]));
+				nameValuePaire.add(new BasicNameValuePair("date", params[6]));
+				nameValuePaire.add(new BasicNameValuePair("capacity", params[7]));
+				nameValuePaire.add(new BasicNameValuePair("comment", params[8]));
+				
+				DefaultHttpClient httpClient = new DefaultHttpClient();
+				HttpPost httpPost = new HttpPost(POST_URL);
+				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePaire));
+
+				HttpResponse httpResponse = httpClient.execute(httpPost);
+				HttpEntity httpEntity = httpResponse.getEntity();
+				InputStream inputStream = httpEntity.getContent();
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(inputStream, "iso-8859-1"), 8);
+				StringBuffer stringBuffer = new StringBuffer();
+				String line = null;
+				while ((line = reader.readLine()) != null) {
+					stringBuffer.append(line);
+				}
+				inputStream.close(); // free memory
+
+				content = stringBuffer.toString();
+				return content;
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				return null;
+			}
+
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			progressDialog.setMessage(result);
+			progressDialog.dismiss();
+			System.out.println(result);
+			
+
+		}
+
+	}
+
+}

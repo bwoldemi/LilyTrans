@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">TransLily</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="lily">LILY Transportation </string>
+    <string name="starting_point">From: </string>
+    <string name="starting_location">Enter starting point</string>
+    <string name="destination_point">To: </string>
+    <string name="ending_location">Enter your destination</string>
+    <string name="senior_name"> Name: </string>
+    <string name="typein_name"> Enter your full name here</string>
+    <string name="contact_info"> Phone Number: </string>
+    <string name="phone_number"> 0458749818 </string>
+    <string name="button_askride"> Search rides</string>
+    <string name="button_offerride"> Offer ride</string>
+    <string name="pick_time"> Pick time </string>
+    <string name="pick_date"> Pick date </string>
+    <string name="title_activity_ask_ride">AskRideActivity</string>
+    <string name="title_activity_booked_ride">BookedRideActivity</string>
+    <string name="show_my_booked_rides">Show my booked rides</string>
+    <string name="title_activity_post_ride">PostRideActivity</string>
+    <string name="search_ride">Search Ride </string>
+    <string name="post_ride">Post Ride </string>
+    <string name="My_request_ride">My Request Ride </string>
+    <string name="My_Post_rides">My Post Ride</string>
+
+</resources>

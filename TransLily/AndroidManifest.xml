@@ -26,14 +26,21 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AskRideActivity"
+            android:name=".SearchRideActivity"
             android:label="@string/title_activity_ask_ride"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".BookedRideActivity"
-           
             android:label="@string/title_activity_booked_ride" >
+        </activity>
+        <activity
+            android:name=".PostRideActivity"
+            android:label="@string/title_activity_post_ride" >
+        </activity>
+        <activity
+            android:name=".AskRideActivity"
+            android:label="@string/title_activity_ask_ride" >
         </activity>
     </application>
 

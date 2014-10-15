@@ -1,0 +1,50 @@
+package com.example.translili;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.EditText;
+
+public class PostRideActivity extends Activity {
+	private EditText editTextServiceProvider;
+	private EditText editTextTaxiID;
+	private EditText editTextStartingPoint;
+	private EditText editTextDestinationPoint;
+	private EditText editTextNumberOfPerson;
+	private EditText editTextPhoneNumber;
+	private EditText editTextComment;
+	private EditText editTextTime;
+	private EditText editTextDate;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_post_ride);
+		editTextServiceProvider = (EditText) findViewById(R.id.service_provider_post);
+		editTextTaxiID = (EditText) findViewById(R.id.taxi_id_post);
+		editTextStartingPoint = (EditText) findViewById(R.id.starting_point_post);
+		editTextDestinationPoint = (EditText) findViewById(R.id.destination_point_post);
+		editTextNumberOfPerson = (EditText) findViewById(R.id.number_of_person_post);
+		editTextPhoneNumber = (EditText) findViewById(R.id.phone_number_post);
+		editTextComment = (EditText) findViewById(R.id.coment_post);
+		editTextTime = (EditText) findViewById(R.id.time_picker_post);
+		editTextDate = (EditText) findViewById(R.id.date_picker_post);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.post_ride, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+		if (id == R.id.action_settings) {
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+}

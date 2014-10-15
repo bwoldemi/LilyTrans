@@ -1,20 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="android.content.DialogInterface.OnClickListener"/>
-<fullyQualifiedTypeName name="android.content.DialogInterface"/>
-<fullyQualifiedTypeName name="android.content.DialogInterface.OnCancelListener"/>
-<fullyQualifiedTypeName name="android.content.Intent"/>
-<fullyQualifiedTypeName name="android.provider.Settings"/>
-<fullyQualifiedTypeName name="android.os.AsyncTask"/>
-<fullyQualifiedTypeName name="android.view.TextureView"/>
-<fullyQualifiedTypeName name="android.widget.EditText"/>
-<fullyQualifiedTypeName name="www.tutbreket.net.R.id"/>
-<fullyQualifiedTypeName name="www.tutbreket.net.RestwebMainActivity.DownloadVotingsTask.UploadVoteTask"/>
-<fullyQualifiedTypeName name="org.apache.http.client.HttpClient"/>
-<fullyQualifiedTypeName name="org.apache.http.impl.conn.DefaultClientConnection"/>
-<fullyQualifiedTypeName name="android.util.Log"/>
-<fullyQualifiedTypeName name="java.io.UnsupportedEncodingException"/>
-<fullyQualifiedTypeName name="java.io.Reader"/>
 <fullyQualifiedTypeName name="java.io.InputStreamReader"/>
 <fullyQualifiedTypeName name="java.io.InputStream"/>
 <fullyQualifiedTypeName name="org.apache.http.impl.client.DefaultHttpClient"/>
@@ -31,8 +16,6 @@
 <fullyQualifiedTypeName name="android.content.Context"/>
 <fullyQualifiedTypeName name="android.widget.ArrayAdapter"/>
 <fullyQualifiedTypeName name="android.view.ViewGroup"/>
-<fullyQualifiedTypeName name="android.view.LayoutInflater"/>
-<fullyQualifiedTypeName name="android.view.View"/>
 <fullyQualifiedTypeName name="com.example.translili.R.layout"/>
 <fullyQualifiedTypeName name="com.example.translili.ScheduleList"/>
 <fullyQualifiedTypeName name="android.widget.Button"/>
@@ -48,7 +31,6 @@
 <fullyQualifiedTypeName name="model.Task"/>
 <fullyQualifiedTypeName name="java.util.Date"/>
 <fullyQualifiedTypeName name="model.Tasks"/>
-<fullyQualifiedTypeName name="android.app.ProgressDialog"/>
 <fullyQualifiedTypeName name="org.json.JSONObject"/>
 <fullyQualifiedTypeName name="model.Customer"/>
 <fullyQualifiedTypeName name="java.util.Vector"/>
@@ -57,7 +39,25 @@
 <fullyQualifiedTypeName name="menuActivities.Read"/>
 <fullyQualifiedTypeName name="menuActivities.Write"/>
 <fullyQualifiedTypeName name="menuActivities.History"/>
-<fullyQualifiedTypeName name="lily.homecare.R.layout"/>
+<fullyQualifiedTypeName name="menuActivities.Writer"/>
 <fullyQualifiedTypeName name="lily.homecare.R"/>
+<fullyQualifiedTypeName name="android.content.Intent"/>
+<fullyQualifiedTypeName name="android.widget.RadioButton"/>
+<fullyQualifiedTypeName name="android.widget.RadioGroup"/>
+<fullyQualifiedTypeName name="android.view.LayoutInflater"/>
+<fullyQualifiedTypeName name="lily.homecare.R.layout"/>
+<fullyQualifiedTypeName name="android.content.DialogInterface"/>
+<fullyQualifiedTypeName name="android.content.DialogInterface.OnClickListener"/>
 <fullyQualifiedTypeName name="lily.homecare.R.id"/>
+<fullyQualifiedTypeName name="lily.homecare.R.string"/>
+<fullyQualifiedTypeName name="lily.homecare.MainActivity"/>
+<fullyQualifiedTypeName name="server.fi.Server.DownLoader"/>
+<fullyQualifiedTypeName name="android.app.ProgressDialog"/>
+<fullyQualifiedTypeName name="android.view.View"/>
+<fullyQualifiedTypeName name="com.example.translili.MainActivity"/>
+<fullyQualifiedTypeName name="android.preference.PreferenceFragment"/>
+<fullyQualifiedTypeName name="com.example.translili.R.xml"/>
+<fullyQualifiedTypeName name="com.example.translili.MainActivity.SettingFragment"/>
+<fullyQualifiedTypeName name="android.content.SharedPreferences"/>
+<fullyQualifiedTypeName name="android.preference.PreferenceManager"/>
 </qualifiedTypeNameHistroy>

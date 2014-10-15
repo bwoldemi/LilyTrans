@@ -1,92 +1,56 @@
 package com.example.translili;
 
-import java.io.BufferedReader;
+import java.util.Calendar;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONException;
-
-import data.ScheduleList;
-
-import android.support.v7.app.ActionBarActivity;
-import android.text.Html;
-import android.app.ProgressDialog;
-import android.content.Context;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Message;
-import android.view.LayoutInflater;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.Toast;
 
 public class AskRideActivity extends ActionBarActivity {
-	private Vector<ScheduleList> schedules = null;
-	private ListView listView;
-	private Context mainContext;
-	private TextView userProfile;
-	
-	//user inputs  
-	private String name = null;
-	private String phonenumber = null;
-	private String from=null;
-	private String to=null;
-	private String date=null;
-	
-	public final static String SEARCH_AVILABLE_TRANSPORTS = "http://tutbereket.net//LiliTransport/search_avilable_transports.php";
-	public final static String BOOKING_URL = "http://tutbereket.net//LiliTransport/insert_user_book.php";
-	
-	
+	private EditText name;
+	private EditText from;
+	private EditText to;
+	private EditText phoneNumber;
+	private Button datePicker;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_ask_ride);
-		userProfile = (TextView) findViewById(R.id.userProfile);
-
-		name = getIntent().getStringExtra("name");
-		from = getIntent().getStringExtra("from");
-		to = getIntent().getStringExtra("to");
-		phonenumber = getIntent().getStringExtra("contact");
-		date = getIntent().getStringExtra("date");
-		//date = "2014-09-27";
-		userProfile.setText(Html.fromHtml("Name: " + name + "<br/>" + "From: "
-				+ from + "<br/>" + "To: " + to + "<br/>" + "Phonenumber: "
-				+ phonenumber + "<br/>" + "Date: " + date));
-
-		listView = (ListView) findViewById(R.id.offerList);
-		this.mainContext = this;
-		new SearchAvilableTransports().execute(SEARCH_AVILABLE_TRANSPORTS);
+		to = (EditText) findViewById(R.id.to);
+		from = (EditText) findViewById(R.id.from);
+		phoneNumber = (EditText) findViewById(R.id.phoneNumber);
+		name = (EditText) findViewById(R.id.name);
+		datePicker = (Button) findViewById(R.id.datePicker);
 
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.ask_ride, menu);
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
 
+	/**
+	 * Setting, about page
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle action bar item clicks here. The action bar will
+		// automatically handle clicks on the Home/Up button, so long
+		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
 			return true;
@@ -94,227 +58,77 @@ public class AskRideActivity extends ActionBarActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	/**
-	 * Request available transports, by day, starting point and destination point
-	 * 
-	 * @author Thinkpad
-	 * 
-	 */
-	private class SearchAvilableTransports extends
-			AsyncTask<String, Void, String> {
-		ProgressDialog progressDialog ;
-		
-		
+	public void askForRide(View V) {
+		if (!checkForms()) {
+			Toast.makeText(this, " Please Complete Form", Toast.LENGTH_SHORT).show();
+			//Toast.makeText(this, "Please Complete Forms", Toast.LENGTH_SHORT);
+		} else {
+			Intent intent = new Intent(this, SearchRideActivity.class);
+			intent.putExtra("name", name.getText().toString());
+			intent.putExtra("from", from.getText().toString());
+			intent.putExtra("to", to.getText().toString());
+			intent.putExtra("contact", phoneNumber.getText().toString());
+			intent.putExtra("date", datePicker.getText());
+			// System.out.println(from.getText().toString());
+			startActivity(intent);
+		}
+	}
+
+	public boolean checkForms() {
+		if (name.getText().toString().trim().equals("")) {
+			return false;
+		} else if (from.getText().toString().trim().equals("")) {
+			return false;
+		}
+		if (to.getText().toString().trim().equals("")) {
+			return false;
+		}
+		if (phoneNumber.getText().toString().trim().equals("")) {
+			return false;
+		}
+		if (datePicker.getText().toString().trim()
+				.equalsIgnoreCase("Pick date")) {
+			return false;
+		}
+
+		return true;
+	}
+
+	
+	public static class DatePickerFragment extends DialogFragment implements
+			DatePickerDialog.OnDateSetListener {
+		Button datePicker;
+
 		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			progressDialog= ProgressDialog.show(AskRideActivity.this, "Searching", "Searching Avilable Rides");
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			// Use the current date as the default date in the picker
+			final Calendar c = Calendar.getInstance();
+			int currentYear = c.get(Calendar.YEAR);
+			int currentMonth = c.get(Calendar.MONTH);
+			int currentDay = c.get(Calendar.DAY_OF_MONTH);
+
+			// Create a new instance of DatePickerDialog and return it
+			return new DatePickerDialog(getActivity(), this, currentYear,
+					currentMonth, currentDay);
 		}
 
 		@Override
-		protected String doInBackground(String... params) {
+		public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
 			// TODO Auto-generated method stub
-			String content = null;
-			try {
-				DefaultHttpClient httpClient = new DefaultHttpClient();
-				System.out.println(params[0]);
-				
-				HttpPost httpPost = new HttpPost(params[0]);
-				List<NameValuePair> nameValuePaire = new ArrayList<NameValuePair>(
-						4);
+			Log.d("arg0", arg0.toString());
 
-				nameValuePaire.add(new BasicNameValuePair("starting", from));
-				nameValuePaire.add(new BasicNameValuePair("destination",
-						to));
-				nameValuePaire
-						.add(new BasicNameValuePair("date", date));
-				nameValuePaire
-				.add(new BasicNameValuePair("phonenumber", phonenumber));
-				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePaire));
+			datePicker = (Button) getActivity().findViewById(R.id.datePicker);
+			String date = Integer.toString(arg3) + "-" + Integer.toString(arg2)
+					+ "-" + Integer.toString(arg1);
 
-				HttpResponse httpResponse = httpClient.execute(httpPost);
-				HttpEntity httpEntity = httpResponse.getEntity();
-				
-				InputStream inputStream = httpEntity.getContent();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(inputStream, "iso-8859-1"), 8);
-				StringBuffer stringBuffer = new StringBuffer();
-				String line = null;
-				while ((line = reader.readLine()) != null) {
-					stringBuffer.append(line);
-				}
-				inputStream.close(); // free memory
+			datePicker.setText(date);
 
-				content = stringBuffer.toString();
-				return content;
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				return null;
-			}
-
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			progressDialog.dismiss();
-			System.out.println(result);
-			try {
-				System.out.println("above");
-				schedules = Parser.parse(result);
-				System.out.println("below");
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			listView.setAdapter(new ScheduleArrayAdapter(mainContext, schedules));
-		}
-	
-	}
-	
-
-	/**
-	 * Listview adapter
-	 * 
-	 * @author Thinkpad
-	 * 
-	 */
-	private class ScheduleArrayAdapter extends ArrayAdapter<ScheduleList> {
-		Vector<ScheduleList> scheduleList;
-		Context context;
-		
-		public ScheduleArrayAdapter(Context context,
-				Vector<ScheduleList> resource) {
-			super(context, R.layout.schedules, resource);
-			this.scheduleList = resource;
-			this.context = context;
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			LayoutInflater inflator = (LayoutInflater) context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-			if (convertView == null) {
-				convertView = inflator.inflate(R.layout.schedules, parent,
-						false);
-			}
-
-			TextView tvServiceGroup = (TextView) convertView
-					.findViewById(R.id.TextViewServiceGroup);
-			TextView tvTaxiId = (TextView) convertView
-					.findViewById(R.id.TextViewGroupID);
-			TextView tvPickUpTime = (TextView) convertView
-					.findViewById(R.id.TextViewPickUpTime);
-
-			Button button = (Button) convertView
-					.findViewById(R.id.ButtonStatus);
-			
-
-			tvServiceGroup
-					.setText(scheduleList.get(position).getServiceGroup());
-			tvTaxiId.setText(scheduleList.get(position).getTaxiID());
-
-			System.out.println(scheduleList.get(position).getPickUpTime());
-			System.out
-					.println(scheduleList.get(position).getNumbureOfPersons());
-
-			tvPickUpTime.setText(scheduleList.get(position).getPickUpTime());
-			button.setTag(scheduleList.get(position).getTransportID());
-			
-			if(scheduleList.get(position).getStatus().equalsIgnoreCase("booked")){
-				button.setText("Booked");
-				button.setTextColor(Color.GREEN);
-				button.setClickable(false);
-			}else{
-				button.setText("Request");
-			}
-			
-
-			return convertView;
 		}
 	}
 
-	/**
-	 * book the transport
-	 * 
-	 * @param view
-	 */
-	public void bookTransport(View view) {
-		Button button = (Button) view;
-		button.setText("Booked");
-		button.setTextColor(Color.GREEN);
-		button.setClickable(false);
-		int id = (Integer) button.getTag();
-		new BookRideAsynckTask().execute(id);
-	}
-    public void showMyBookedRides(View view){
-    	Intent intent = new Intent(this, BookedRideActivity.class);
-		intent.putExtra("name", name);
-		intent.putExtra("phonenumber", phonenumber);
-		intent.putExtra("date", date);
-		startActivity(intent);
-    }
-    
-    
-	/**
-	 * booking time
-	 * 
-	 * @author Thinkpad
-	 * 
-	 */
-	
-	private class BookRideAsynckTask extends AsyncTask<Integer, Void, String> {
-		ProgressDialog progressDialog;
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			progressDialog= ProgressDialog.show(AskRideActivity.this, "Saving", "Saving....");
-		}
-
-		@Override
-		protected String doInBackground(Integer... params) {
-			// TODO Auto-generated method stub
-			String content = null;
-			try {
-				DefaultHttpClient httpClient = new DefaultHttpClient();
-				System.out.println(params[0]);
-				// get the first argument passed to the execute method
-				HttpPost httpPost = new HttpPost(BOOKING_URL);
-				List<NameValuePair> nameValuePaire = new ArrayList<NameValuePair>(
-						3);
-				nameValuePaire.add(new BasicNameValuePair("name", name));
-				nameValuePaire.add(new BasicNameValuePair("phonenumber",
-						phonenumber));
-				nameValuePaire.add(new BasicNameValuePair("id", Integer
-						.toString(params[0])));
-				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePaire));
-
-				HttpResponse httpResponse = httpClient.execute(httpPost);
-				HttpEntity httpEntity = httpResponse.getEntity();
-				InputStream inputStream = httpEntity.getContent();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(inputStream, "iso-8859-1"), 8);
-				StringBuffer stringBuffer = new StringBuffer();
-				String line = null;
-				while ((line = reader.readLine()) != null) {
-					stringBuffer.append(line);
-				}
-				inputStream.close(); // free memory
-
-				content = stringBuffer.toString();
-				return content;
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				return null;
-			}
-
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			System.out.println(result);
-			progressDialog.dismiss();
-		}
-
+	public void showDatePickerDialog(View v) {
+		DialogFragment newFragment = new DatePickerFragment();
+		newFragment.show(getSupportFragmentManager(), "Date Picker");
 	}
 
 }

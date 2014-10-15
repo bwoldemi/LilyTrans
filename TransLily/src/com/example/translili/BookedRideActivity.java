@@ -16,8 +16,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 
-import data.ScheduleList;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -30,9 +28,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-
 import android.widget.ListView;
 import android.widget.TextView;
+import data.Parser;
+import data.ScheduleList;
 
 public class BookedRideActivity extends Activity {
 	private String name;
@@ -40,24 +39,25 @@ public class BookedRideActivity extends Activity {
 	private String date;
 	private ListView listView;
 	private TextView tvBookedNameDate;
-	
-	public final static String BOOKED_URL="http://tutbereket.net//LiliTransport/search_user_books.php";
+
+	public final static String BOOKED_URL = "http://tutbereket.net//LiliTransport/search_user_books.php";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_booked_ride);
-		
-		listView=(ListView)findViewById(R.id.bookedRidesListView);
-		tvBookedNameDate =(TextView)findViewById(R.id.tvBookedName);
-		
-		name= getIntent().getStringExtra("name");
-		
-		phonenumber =getIntent().getStringExtra("phonenumber");
+
+		listView = (ListView) findViewById(R.id.bookedRidesListView);
+		tvBookedNameDate = (TextView) findViewById(R.id.tvBookedName);
+
+		name = getIntent().getStringExtra("name");
+
+		phonenumber = getIntent().getStringExtra("phonenumber");
 		date = getIntent().getStringExtra("date");
-		
-		tvBookedNameDate.setText(Html.fromHtml("Name: "+ name +"<br/>"+"Date: " +date));
-		new SearchBooksAsynckTask().execute(phonenumber,date);
+
+		tvBookedNameDate.setText(Html.fromHtml("Name: " + name + "<br/>"
+				+ "Date: " + date));
+		new SearchBooksAsynckTask().execute(phonenumber, date);
 	}
 
 	@Override
@@ -74,17 +74,14 @@ public class BookedRideActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
 	
-	
-	
-	
+
 	private class BookArrayAdapter extends ArrayAdapter<ScheduleList> {
 		Vector<ScheduleList> bookedRides;
 		Context context;
-		
-		
-		public BookArrayAdapter(Context context,
-				Vector<ScheduleList> resource) {
+
+		public BookArrayAdapter(Context context, Vector<ScheduleList> resource) {
 			super(context, R.layout.booked_rides, resource);
 			this.bookedRides = resource;
 			this.context = context;
@@ -100,32 +97,44 @@ public class BookedRideActivity extends Activity {
 						false);
 			}
 
-			TextView tvServiceGroup = (TextView) convertView.findViewById(R.id.tvBookedServiceGroup);
-			TextView tvGroupId = (TextView) convertView.findViewById(R.id.tvBookedGroupID);
-			TextView tvStartinpoint = (TextView) convertView.findViewById(R.id.tvBookedStartingPoint);
-			TextView tvDestination = (TextView) convertView.findViewById(R.id.tvBookedDestination);
-			TextView tvPickupTime = (TextView) convertView.findViewById(R.id.tvBookedPickUpTime);
-			TextView tvPhoneNumber = (TextView) convertView.findViewById(R.id.tvBookedPhoneNumber);
+			TextView tvServiceGroup = (TextView) convertView
+					.findViewById(R.id.tvBookedServiceGroup);
+			TextView tvGroupId = (TextView) convertView
+					.findViewById(R.id.tvBookedGroupID);
+			TextView tvStartinpoint = (TextView) convertView
+					.findViewById(R.id.tvBookedStartingPoint);
+			TextView tvDestination = (TextView) convertView
+					.findViewById(R.id.tvBookedDestination);
+			TextView tvPickupTime = (TextView) convertView
+					.findViewById(R.id.tvBookedPickUpTime);
+			TextView tvPhoneNumber = (TextView) convertView
+					.findViewById(R.id.tvBookedPhoneNumber);
 
-			tvServiceGroup.setText(Html.fromHtml("<b>"+"Type: </b>"+bookedRides.get(position).getServiceGroup()));
-			tvGroupId.setText(Html.fromHtml("<b>"+"Id: </b>" +bookedRides.get(position).getTaxiID()));
-			tvStartinpoint.setText(Html.fromHtml("<b>"+"Starting Point: </b>" +bookedRides.get(position).getStartingPoint()));
-			tvDestination.setText(Html.fromHtml("<b>"+"Destination: </b>" + bookedRides.get(position).getDestinationPoint()));
-			tvPickupTime.setText(Html.fromHtml("<b>"+"Pick up Time : </b>"+ bookedRides.get(position).getPickUpTime()));
-			tvPhoneNumber.setText(Html.fromHtml("<b>"+"Phone number : </b>"+ bookedRides.get(position).getPhonenumber()));
+			tvServiceGroup.setText(Html.fromHtml("<b>" + "Type: </b>"
+					+ bookedRides.get(position).getServiceGroup()));
+			tvGroupId.setText(Html.fromHtml("<b>" + "Id: </b>"
+					+ bookedRides.get(position).getTaxiID()));
+			tvStartinpoint.setText(Html.fromHtml("<b>" + "Starting Point: </b>"
+					+ bookedRides.get(position).getStartingPoint()));
+			tvDestination.setText(Html.fromHtml("<b>" + "Destination: </b>"
+					+ bookedRides.get(position).getDestinationPoint()));
+			tvPickupTime.setText(Html.fromHtml("<b>" + "Pick up Time : </b>"
+					+ bookedRides.get(position).getPickUpTime()));
+			tvPhoneNumber.setText(Html.fromHtml("<b>" + "Phone number : </b>"
+					+ bookedRides.get(position).getPhonenumber()));
 
 			return convertView;
 		}
 	}
-	
-	
-	
+
 	private class SearchBooksAsynckTask extends AsyncTask<String, Void, String> {
 		ProgressDialog progressDialog;
+
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			progressDialog= ProgressDialog.show(BookedRideActivity.this, "Searching", "Searching booked rides....");
+			progressDialog = ProgressDialog.show(BookedRideActivity.this,
+					"Searching", "Searching booked rides....");
 		}
 
 		@Override
@@ -139,15 +148,10 @@ public class BookedRideActivity extends Activity {
 				HttpPost httpPost = new HttpPost(BOOKED_URL);
 				List<NameValuePair> nameValuePaire = new ArrayList<NameValuePair>(
 						3);
-				
+
 				nameValuePaire.add(new BasicNameValuePair("phonenumber",
 						params[0]));
-				nameValuePaire.add(new BasicNameValuePair("date",
-						params[1]));
-				
-			
-				
-				
+				nameValuePaire.add(new BasicNameValuePair("date", params[1]));
 				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePaire));
 
 				HttpResponse httpResponse = httpClient.execute(httpPost);
@@ -175,7 +179,8 @@ public class BookedRideActivity extends Activity {
 		protected void onPostExecute(String result) {
 			System.out.println(result);
 			try {
-				listView.setAdapter(new BookArrayAdapter(BookedRideActivity.this, Parser.parse(result)));
+				listView.setAdapter(new BookArrayAdapter(
+						BookedRideActivity.this, Parser.parse(result)));
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
