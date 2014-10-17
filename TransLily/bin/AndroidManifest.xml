@@ -26,21 +26,25 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SearchRideActivity"
+            android:name="request.SearchRideActivity"
             android:label="@string/title_activity_ask_ride"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".BookedRideActivity"
+            android:name="request.BookedRideActivity"
             android:label="@string/title_activity_booked_ride" >
         </activity>
         <activity
-            android:name=".PostRideActivity"
+            android:name="post.PostRideActivity"
             android:label="@string/title_activity_post_ride" >
         </activity>
         <activity
-            android:name=".AskRideActivity"
+            android:name="request.AskRideActivity"
             android:label="@string/title_activity_ask_ride" >
+        </activity>
+        <activity
+            android:name="post.MyPostedRides"
+            android:label="@string/title_activity_my_post_rides" >
         </activity>
     </application>
 

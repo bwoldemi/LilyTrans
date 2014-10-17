@@ -1,0 +1,90 @@
+package post;
+
+import java.util.Calendar;
+
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+
+import com.example.translili.R;
+
+public class MyPostedRides extends ActionBarActivity {
+	private EditText phoneNumber;
+	private Button date;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_my_post_rides);
+		date = (Button) findViewById(R.id.date_picker_post);
+		phoneNumber = (EditText) findViewById(R.id.phone_number_post);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.my_post_rides, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+		if (id == R.id.action_settings) {
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	public void voidretrivePostRides(View view) {
+		String d = date.getText().toString();
+		String phone = phoneNumber.getText().toString();
+	}
+
+	public static class DatePickerFragment extends DialogFragment implements
+			DatePickerDialog.OnDateSetListener {
+		private Button datePicker;
+
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			// Use the current date as the default date in the picker
+			final Calendar c = Calendar.getInstance();
+			int currentYear = c.get(Calendar.YEAR);
+			int currentMonth = c.get(Calendar.MONTH);
+			int currentDay = c.get(Calendar.DAY_OF_MONTH);
+
+			// Create a new instance of DatePickerDialog and return it
+			return new DatePickerDialog(getActivity(), this, currentYear,
+					currentMonth, currentDay);
+		}
+
+		@Override
+		public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
+			// TODO Auto-generated method stub
+			Log.d("arg0", arg0.toString());
+
+			datePicker = (Button) getActivity().findViewById(
+					R.id.date_picker_post);
+			String date = Integer.toString(arg3) + "-" + Integer.toString(arg2)
+					+ "-" + Integer.toString(arg1);
+
+			datePicker.setText(date);
+
+		}
+	}
+
+	public void showDatePickerDialogPost(View v) {
+		DialogFragment newFragment = new DatePickerFragment();
+		newFragment.show(getSupportFragmentManager(), "Date Picker");
+	}
+	// Search
+}

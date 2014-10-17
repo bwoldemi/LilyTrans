@@ -1,5 +1,9 @@
 package com.example.translili;
 
+import post.MyPostedRides;
+import post.PostRideActivity;
+import request.AskRideActivity;
+import request.BookedRideActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -30,7 +34,7 @@ public class MainActivity extends ActionBarActivity {
 		Intent intent = new Intent(this, AskRideActivity.class);
 		startActivity(intent);
 	}
-
+	
 	public void postRide(View view) {
 		
 		Intent intent = new Intent(this, PostRideActivity.class);
@@ -44,7 +48,7 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	public void myPostRides(View view) {
-		Intent intent = new Intent(this, AskRideActivity.class);
+		Intent intent = new Intent(this, MyPostedRides.class);
 		startActivity(intent);
 	}
 

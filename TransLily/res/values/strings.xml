@@ -26,12 +26,13 @@
     <string name="My_request_rides">My request rides </string>
     <string name="My_Post_rides">My post rides</string>
     <string name="welcome_message">Welcome To Lily Transport </string>
-    
     <string name="service_provider">Service provider </string>
     <string name="taxi_id">Taxi id/ Name</string>
     <string name="starting_point">Starting point</string>
-    <string name ="destination"> Destination </string>
+    <string name="destination"> Destination </string>
     <string name="date"> Date </string>
     <string name="number_of_person">Number of Person</string>
     <string name="comment">Comment </string>
- </resources>
+    <string name="title_activity_my_post_rides">MyPostRides</string>
+
+</resources>

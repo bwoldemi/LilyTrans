@@ -25,8 +25,7 @@ public class Parser {
 			schedule.setDestinationPoint(object.getString("Destination"));
 			schedule.setPickUpTime(object.getString("PickUpTime"));
 			schedule.setDate(object.getString("Date"));
-			schedule.setNumbureOfPersons(Integer.parseInt(object
-					.getString("Capacity")));
+			schedule.setNumbureOfPersons(Integer.parseInt(object.getString("Capacity")));
 			schedule.setPhonenumber(object.getString("PhoneNumber"));
 			schedule.setComment(object.getString("Comment"));
 			schedule.setStatus(object.optString("status"));
