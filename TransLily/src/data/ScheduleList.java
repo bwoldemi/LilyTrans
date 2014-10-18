@@ -1,8 +1,9 @@
 package data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 
-
-public class ScheduleList {
+public class ScheduleList implements Parcelable {
 
 	private int transportID;
 	private String serviceGroup;
@@ -15,12 +16,27 @@ public class ScheduleList {
 	private String phonenumber;
 	private String comment;
 	private String status;
-
 	
-
+	public ScheduleList(Parcel source){
+		this.transportID=source.readInt();
+		this.serviceGroup=source.readString();
+		this.taxiID=source.readString();
+		this.startingPoint=source.readString();
+		this.destinationPoint=source.readString();
+		this.pickUpTime=source.readString();
+		this.date= source.readString();
+		this.numbureOfPersons= source.readInt();
+		this.comment= source.readString();
+		this.status= source.readString();
+	}
+	public ScheduleList(){
+		
+	}
+	
 	public int getTransportID() {
 		return transportID;
 	}
+	
 
 	public void setTransportID(int transportID) {
 		this.transportID = transportID;
@@ -66,8 +82,6 @@ public class ScheduleList {
 		this.pickUpTime = pickUpTime;
 	}
 
-	
-
 	public String getDate() {
 		return date;
 	}
@@ -107,5 +121,51 @@ public class ScheduleList {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(transportID);
+		dest.writeString(serviceGroup);
+		dest.writeString(taxiID);
+		dest.writeString(startingPoint);
+		dest.writeString(destinationPoint);
+		dest.writeString(pickUpTime);
+		dest.writeString(date);
+		dest.writeInt(numbureOfPersons);
+		dest.writeString(phonenumber);
+		dest.writeString(comment);
+		dest.writeString(status);
+
+	}
+
+	public static final Parcelable.ClassLoaderCreator<ScheduleList> CREATOR =
+			new ClassLoaderCreator<ScheduleList>() {
+		
+
+		@Override
+		public ScheduleList[] newArray(int size) {
+			// TODO Auto-generated method stub
+			return new ScheduleList[size];
+		}
+
+		@Override
+		public ScheduleList createFromParcel(Parcel source) {
+		
+			return new ScheduleList(source);
+		}
+
+		@Override
+		public ScheduleList createFromParcel(Parcel source, ClassLoader loader) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+	};
+
 
 }

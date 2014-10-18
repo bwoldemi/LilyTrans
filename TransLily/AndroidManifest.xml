@@ -46,6 +46,10 @@
             android:name="post.MyPostedRides"
             android:label="@string/title_activity_my_post_rides" >
         </activity>
+        <activity
+            android:name="post.ReservedPostRides"
+            android:label="@string/title_activity_reserved_post_rides" >
+        </activity>
     </application>
 
 </manifest>

@@ -34,5 +34,10 @@
     <string name="number_of_person">Number of Person</string>
     <string name="comment">Comment </string>
     <string name="title_activity_my_post_rides">MyPostRides</string>
+    <string name="title_activity_reserved_post_rides">ReservedPostRides</string>
+    <string name="cancel">Cancel</string>
+    <string name="approve">Approve</string>
+    <color name="text_color">#FFF</color>
+    <color name="background">#669900</color>
 
 </resources>

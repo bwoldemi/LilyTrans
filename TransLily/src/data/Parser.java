@@ -37,30 +37,23 @@ public class Parser {
 	
 	
 	
-	public static Vector<ScheduleList> parseBookedRides(String content)
+	public static Vector<BookedSchedule> parseBookedRides(String content)
 			throws JSONException {
-		Vector<ScheduleList> schedules = new Vector<ScheduleList>();
+		Vector<BookedSchedule> bookedSchedules = new Vector<BookedSchedule>();
 
 		JSONArray jsonArray = new JSONArray(content);
-		ScheduleList schedule;
+		BookedSchedule bookedSchedule;
 		for (int i = 0; i < jsonArray.length(); i++) {
-			schedule = new ScheduleList();
+			bookedSchedule = new BookedSchedule();
 			JSONObject object = jsonArray.getJSONObject(i);
-			
-			schedule.setTransportID(Integer.parseInt(object.getString("ID")));
-			schedule.setServiceGroup(object.getString("ServiceGroup"));
-			schedule.setTaxiID(object.getString("GroupId"));
-			schedule.setStartingPoint(object.getString("StartingPoint"));
-			schedule.setDestinationPoint(object.getString("Destination"));
-			schedule.setPickUpTime(object.getString("PickUpTime"));
-			schedule.setDate(object.getString("Date"));
-			schedule.setNumbureOfPersons(Integer.parseInt(object
-					.getString("Capacity")));
-			schedule.setPhonenumber(object.getString("PhoneNumber"));
-			schedule.setComment(object.getString("Comment"));
-			schedules.add(schedule);
+			bookedSchedule.setBookId(Integer.parseInt(object.getString("BookId")));
+			bookedSchedule.setName(object.getString("Name"));
+			bookedSchedule.setPhonenumber(object.getString("PhoneNumber"));
+			bookedSchedule.setTransportID(Integer.parseInt(object.getString("ID")));
+			bookedSchedule.setStatus(object.getString("status"));
+			bookedSchedules.add(bookedSchedule);
 		}
-		return schedules;
+		return bookedSchedules;
 	}
 
 }

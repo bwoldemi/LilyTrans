@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Vector;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -15,11 +16,12 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
-import request.BookedRideActivity;
+
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -31,6 +33,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -48,6 +52,7 @@ public class MyPostedRides extends ActionBarActivity {
 	private Button date;
 	private final static  String URL_FOR_SEARCHING_POST_RIDES="http://tutbereket.net/LiliTransport/posted_rides.php";
 	private ListView listView;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -55,6 +60,27 @@ public class MyPostedRides extends ActionBarActivity {
 		date = (Button) findViewById(R.id.date_picker_my_post);
 		phoneNumber = (EditText) findViewById(R.id.phone_number_my_post);
 		listView= (ListView)findViewById(R.id.my_posted_list);
+		
+		listView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				ScheduleList sd=(ScheduleList)parent.getItemAtPosition(position);
+				
+				Intent intent = new Intent(MyPostedRides.this, ReservedPostRides.class);
+				
+				intent.putExtra("serviceGroup",sd.getServiceGroup());
+				intent.putExtra("id", sd.getTransportID());
+				intent.putExtra("starting", sd.getStartingPoint());
+				intent.putExtra("destination", sd.getDestinationPoint());
+				intent.putExtra("date", sd.getDate());
+				
+				startActivity(intent);
+			
+			}
+		});
+		
 	}
 
 	@Override
@@ -237,5 +263,6 @@ public class MyPostedRides extends ActionBarActivity {
 			return convertView;
 		}
 	}
+	
 
 }

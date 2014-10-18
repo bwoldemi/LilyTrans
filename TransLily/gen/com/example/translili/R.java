@@ -858,10 +858,12 @@ containing a value of this type.
         public static final int abc_split_action_bar_is_narrow=0x7f070002;
     }
     public static final class color {
-        public static final int abc_search_url_text_holo=0x7f080003;
+        public static final int abc_search_url_text_holo=0x7f080005;
         public static final int abc_search_url_text_normal=0x7f080000;
         public static final int abc_search_url_text_pressed=0x7f080002;
         public static final int abc_search_url_text_selected=0x7f080001;
+        public static final int background=0x7f080004;
+        public static final int text_color=0x7f080003;
     }
     public static final class dimen {
         /**  Default height of an action bar. 
@@ -1080,11 +1082,11 @@ containing a value of this type.
         public static final int ic_launcher=0x7f020057;
     }
     public static final class id {
-        public static final int ButtonStatus=0x7f06005b;
-        public static final int TextViewGroupID=0x7f060058;
-        public static final int TextViewNumberOfPersons=0x7f06005a;
-        public static final int TextViewPickUpTime=0x7f060059;
-        public static final int TextViewServiceGroup=0x7f060057;
+        public static final int ButtonStatus=0x7f06005e;
+        public static final int TextViewGroupID=0x7f06005b;
+        public static final int TextViewNumberOfPersons=0x7f06005d;
+        public static final int TextViewPickUpTime=0x7f06005c;
+        public static final int TextViewServiceGroup=0x7f06005a;
         public static final int action_bar=0x7f06001c;
         public static final int action_bar_activity_content=0x7f060015;
         public static final int action_bar_container=0x7f06001b;
@@ -1096,12 +1098,12 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f060016;
         public static final int action_menu_presenter=0x7f060017;
         public static final int action_mode_close_button=0x7f060024;
-        public static final int action_settings=0x7f06005e;
+        public static final int action_settings=0x7f060061;
         public static final int activity_chooser_view_content=0x7f060025;
         public static final int always=0x7f06000b;
         public static final int beginning=0x7f060011;
         public static final int bookedRidesListView=0x7f060042;
-        public static final int cancel_requestStatus=0x7f06005d;
+        public static final int cancel_requestStatus=0x7f060060;
         public static final int checkbox=0x7f06002d;
         public static final int collapseActionView=0x7f06000d;
         public static final int coment_post=0x7f06004c;
@@ -1124,6 +1126,7 @@ containing a value of this type.
         public static final int ifRoom=0x7f06000a;
         public static final int image=0x7f060027;
         public static final int listMode=0x7f060001;
+        public static final int listView_reserved_post=0x7f060050;
         public static final int list_item=0x7f060029;
         public static final int middle=0x7f060012;
         public static final int my_posted_list=0x7f060045;
@@ -1132,7 +1135,7 @@ containing a value of this type.
         public static final int none=0x7f060010;
         public static final int normal=0x7f060000;
         public static final int number_of_person_post=0x7f06004a;
-        public static final int offerList=0x7f060050;
+        public static final int offerList=0x7f060052;
         public static final int phoneNumber=0x7f06003f;
         public static final int phone_number_my_post=0x7f060043;
         public static final int phone_number_post=0x7f06004b;
@@ -1156,7 +1159,7 @@ containing a value of this type.
         public static final int showTitle=0x7f060006;
         public static final int split_action_bar=0x7f06001e;
         public static final int starting_point_post=0x7f060048;
-        public static final int status_request=0x7f06005c;
+        public static final int status_request=0x7f06005f;
         public static final int submit_area=0x7f060039;
         public static final int tabMode=0x7f060002;
         public static final int taxi_id_post=0x7f060047;
@@ -1164,16 +1167,18 @@ containing a value of this type.
         public static final int title=0x7f06002b;
         public static final int to=0x7f06003e;
         public static final int top_action_bar=0x7f060020;
-        public static final int tvBookedDestination=0x7f060054;
-        public static final int tvBookedGroupID=0x7f060052;
+        public static final int tvBookedDestination=0x7f060056;
+        public static final int tvBookedGroupID=0x7f060054;
         public static final int tvBookedName=0x7f060041;
-        public static final int tvBookedPhoneNumber=0x7f060056;
-        public static final int tvBookedPickUpTime=0x7f060055;
-        public static final int tvBookedServiceGroup=0x7f060051;
-        public static final int tvBookedStartingPoint=0x7f060053;
+        public static final int tvBookedPhoneNumber=0x7f060058;
+        public static final int tvBookedPickUpTime=0x7f060057;
+        public static final int tvBookedServiceGroup=0x7f060053;
+        public static final int tvBookedStartingPoint=0x7f060055;
+        public static final int tv_ride_booker_info=0x7f060059;
+        public static final int tv_ride_post_info=0x7f06004f;
         public static final int up=0x7f060021;
         public static final int useLogo=0x7f060003;
-        public static final int userProfile=0x7f06004f;
+        public static final int userProfile=0x7f060051;
         public static final int withText=0x7f06000c;
     }
     public static final class integer {
@@ -1231,10 +1236,12 @@ containing a value of this type.
         public static final int activity_main=0x7f03001a;
         public static final int activity_my_post_rides=0x7f03001b;
         public static final int activity_post_ride=0x7f03001c;
-        public static final int activity_search_ride=0x7f03001d;
-        public static final int booked_rides=0x7f03001e;
-        public static final int schedules=0x7f03001f;
-        public static final int support_simple_spinner_dropdown_item=0x7f030020;
+        public static final int activity_reserved_post_rides=0x7f03001d;
+        public static final int activity_search_ride=0x7f03001e;
+        public static final int booked_rides=0x7f03001f;
+        public static final int list_user_books=0x7f030020;
+        public static final int schedules=0x7f030021;
+        public static final int support_simple_spinner_dropdown_item=0x7f030022;
     }
     public static final class menu {
         public static final int ask_ride=0x7f0d0000;
@@ -1242,6 +1249,7 @@ containing a value of this type.
         public static final int main=0x7f0d0002;
         public static final int my_post_rides=0x7f0d0003;
         public static final int post_ride=0x7f0d0004;
+        public static final int reserved_post_rides=0x7f0d0005;
     }
     public static final class string {
         public static final int My_Post_rides=0x7f0b0024;
@@ -1288,8 +1296,10 @@ containing a value of this type.
         public static final int abc_shareactionprovider_share_with_application=0x7f0b000b;
         public static final int action_settings=0x7f0b000f;
         public static final int app_name=0x7f0b000d;
+        public static final int approve=0x7f0b0030;
         public static final int button_askride=0x7f0b0019;
         public static final int button_offerride=0x7f0b001a;
+        public static final int cancel=0x7f0b002f;
         public static final int comment=0x7f0b002c;
         public static final int contact_info=0x7f0b0017;
         public static final int date=0x7f0b002a;
@@ -1315,6 +1325,7 @@ containing a value of this type.
         public static final int title_activity_booked_ride=0x7f0b001e;
         public static final int title_activity_my_post_rides=0x7f0b002d;
         public static final int title_activity_post_ride=0x7f0b0020;
+        public static final int title_activity_reserved_post_rides=0x7f0b002e;
         public static final int typein_name=0x7f0b0016;
         public static final int welcome_message=0x7f0b0025;
     }
