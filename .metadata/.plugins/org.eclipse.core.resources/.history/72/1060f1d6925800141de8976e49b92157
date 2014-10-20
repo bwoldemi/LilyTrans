@@ -1,0 +1,53 @@
+package com.example.translili;
+
+import android.app.Activity;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+
+public class BasicInfoActivity extends Activity {
+	private EditText editTextName;
+	private EditText editTextPhoneNumberOne;
+	private EditText editTextPhoneNumberTwo;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_basic_info);
+		editTextName =(EditText)findViewById(R.id.et_name_basic_info);
+		editTextPhoneNumberOne =(EditText)findViewById(R.id.et_phoneNumber_one_basic_info);
+		editTextPhoneNumberTwo =(EditText)findViewById(R.id.et_phoneNumber_two_basic_info);
+		
+	}
+	public boolean isValidInfo(){
+		String name= editTextName.getText().toString().trim();
+		String phoneOne=editTextPhoneNumberOne.getText().toString().trim();
+		String phoneTwo=editTextPhoneNumberTwo.getText().toString().trim();
+		if(name.equalsIgnoreCase("")){
+			return false;
+		}else if(name.equalsIgnoreCase("")){
+			return false;
+		}else if (name.equalsIgnoreCase("")){
+			return false;
+		}else if (!phoneOne.equalsIgnoreCase(phoneTwo)){
+			return false;
+		}
+		return true;
+		
+	}
+
+	public void SaveUserInfo(View view){
+		
+		String name= editTextName.getText().toString();
+		String phoneOne=editTextPhoneNumberOne.getText().toString();
+		String phoneTwo=editTextPhoneNumberTwo.getText().toString();
+		try{
+		//	SharedPreferences preference = SharedPreferences.Editor;
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+	}
+}

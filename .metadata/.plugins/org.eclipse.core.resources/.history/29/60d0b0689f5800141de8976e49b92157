@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">TransLily</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="lily">LILY Transportation </string>
+    <string name="from">From: </string>
+    <string name="starting_location">Enter starting point</string>
+    <string name="destination_point">To: </string>
+    <string name="ending_location">Enter your destination</string>
+    <string name="senior_name"> Name: </string>
+    <string name="typein_name"> Enter your full name here</string>
+    <string name="contact_info"> Phone Number: </string>
+    <string name="phone_number"> e.g 0458749818 </string>
+    <string name="button_askride"> Search rides</string>
+    <string name="button_offerride"> Offer ride</string>
+    <string name="pick_time"> Pick time </string>
+    <string name="pick_date"> Pick date </string>
+    <string name="title_activity_ask_ride">AskRideActivity</string>
+    <string name="title_activity_booked_ride">BookedRideActivity</string>
+    <string name="show_my_booked_rides">Show my booked rides</string>
+    <string name="title_activity_post_ride">PostRideActivity</string>
+    <string name="search_ride">Search ride </string>
+    <string name="post_ride">Post ride </string>
+    <string name="My_request_rides">My request rides </string>
+    <string name="My_Post_rides">My post rides</string>
+    <string name="welcome_message">Welcome To Lily Transport </string>
+    <string name="service_provider">Service provider </string>
+    <string name="taxi_id">Taxi id/ Name</string>
+    <string name="starting_point">Starting point</string>
+    <string name="destination"> Destination </string>
+    <string name="date"> Date </string>
+    <string name="number_of_person">Number of Person</string>
+    <string name="comment">Comment </string>
+    <string name="title_activity_my_post_rides">MyPostRides</string>
+    <string name="title_activity_reserved_post_rides">ReservedPostRides</string>
+    <string name="cancel">Cancel</string>
+    <string name="approve">Approve</string>
+    <string name="save">Save</string>
+    <string name="please_enter_name_phone"> Please eneter your name and phonenumber</string>
+    <string name="full_name">Full Name</string>
+    <string name="com.lily.pre">com.lily.pre</string>
+
+    <color name="text_color">#FFF</color>
+    <color name="background">#669900</color>
+
+    <string name="title_activity_basic_info">BasicInfoActivity</string>
+    <string name="title_activity_setting">Setting</string>
+
+</resources>

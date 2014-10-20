@@ -1,0 +1,93 @@
+package com.example.translili;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
+
+public class BasicInfoActivity extends Activity {
+	private EditText editTextName;
+	private EditText editTextPhoneNumberOne;
+	private EditText editTextPhoneNumberTwo;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_basic_info);
+		editTextName = (EditText) findViewById(R.id.et_name_basic_info);
+		editTextPhoneNumberOne = (EditText) findViewById(R.id.et_phoneNumber_one_basic_info);
+		editTextPhoneNumberTwo = (EditText) findViewById(R.id.et_phoneNumber_two_basic_info);
+
+	}
+
+	public boolean isValidInfo() {
+		String name = editTextName.getText().toString().trim();
+		String phoneOne = editTextPhoneNumberOne.getText().toString().trim();
+		String phoneTwo = editTextPhoneNumberTwo.getText().toString().trim();
+		if (name.equalsIgnoreCase("")) {
+			Toast.makeText(this, "Please fill your name!", Toast.LENGTH_SHORT)
+					.show();
+			return false;
+		} else if (phoneOne.equalsIgnoreCase("")) {
+			Toast.makeText(this, "Please fill phone number!",
+					Toast.LENGTH_SHORT).show();
+			return false;
+		} else if (phoneTwo.equalsIgnoreCase("")) {
+			Toast.makeText(this, "Please fill phone number!",
+					Toast.LENGTH_SHORT).show();
+			return false;
+		} else if (!phoneOne.equalsIgnoreCase(phoneTwo)) {
+			Toast.makeText(this, "Please check phone numbers!",
+					Toast.LENGTH_SHORT).show();
+			return false;
+		}
+		return true;
+
+	}
+
+	public void SaveUserInfo(View view) {
+		if (!isValidInfo()) {
+			return;
+		}
+		String name = editTextName.getText().toString();
+		String phoneOne = editTextPhoneNumberOne.getText().toString();
+
+		SharedPreferences sharedPre = BasicInfoActivity.this
+				.getSharedPreferences(getString(R.string.com_lily_pre), 0);
+		Editor editor = sharedPre.edit();
+		editor.putString("name", name);
+		editor.putString("phone", phoneOne);
+		editor.commit();
+		Intent intent = new Intent(this, MainActivity.class);
+		startActivity(intent);
+
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (isPhoneNumberAndNameSaved()) {
+
+			finish();
+		}
+	}
+
+	public boolean isPhoneNumberAndNameSaved() {
+
+		SharedPreferences sharedPref = BasicInfoActivity.this
+				.getSharedPreferences(getString(R.string.com_lily_pre), 0);
+
+		String name = sharedPref.getString("name", "").trim();
+		String phone = sharedPref.getString("phone", "").trim();
+
+		if (name.equalsIgnoreCase("") || phone.equalsIgnoreCase("")) {
+			return false;
+		}
+
+		return true;
+	}
+}

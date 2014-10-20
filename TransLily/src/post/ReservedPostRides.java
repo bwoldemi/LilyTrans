@@ -1,12 +1,10 @@
 package post;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -15,30 +13,25 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
-
-import com.example.translili.R;
-import com.example.translili.R.id;
-import com.example.translili.R.layout;
-import com.example.translili.R.menu;
-
-import data.BookedSchedule;
-import data.Parser;
-import data.ScheduleList;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.example.translili.R;
+
+import data.BookedSchedule;
+import data.Parser;
 
 public class ReservedPostRides extends Activity {
 	final static String URL_RESERVED_RIDES = "";
@@ -133,6 +126,7 @@ public class ReservedPostRides extends Activity {
 			progressDialog.dismiss();
 			try {
 				bookedSchedules = Parser.parseBookedRides(result);
+				listView.setAdapter(new ReservedPostRidesArrayAdapter(ReservedPostRides.this, bookedSchedules));
 				
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
@@ -162,10 +156,20 @@ public class ReservedPostRides extends Activity {
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 			if (convertView == null) {
-				convertView = inflator.inflate(R.layout.booked_rides, parent,
+				convertView = inflator.inflate(R.layout.list_user_books, parent,
 						false);
 			}
-
+			
+			TextView tvName= (TextView)findViewById(R.id.tv_name_rserved_post_rides);
+			TextView tvPhoneNumber=(TextView)findViewById(R.id.tv_phonenuber_rserved_post_rides);
+			TextView tvStatus=(TextView)findViewById(R.id.tv_status_rserved_post_rides);
+//			Button approveButton= (Button)findViewById(R.id.button_approve_rserved_post_rides);
+//			Button cancelButton=(Button)findViewById(R.id.button_cancel_rserved_post_rides);
+			
+			tvName.setText(bookedRides.get(position).getName());
+			tvPhoneNumber.setText(bookedRides.get(position).getPhonenumber());
+			tvStatus.setText(bookedRides.get(position).getStatus());
+			
 			return convertView;
 		}
 	}

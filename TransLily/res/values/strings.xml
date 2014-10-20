@@ -12,7 +12,7 @@
     <string name="senior_name"> Name: </string>
     <string name="typein_name"> Enter your full name here</string>
     <string name="contact_info"> Phone Number: </string>
-    <string name="phone_number"> 0458749818 </string>
+    <string name="phone_number"> e.g 0458749818 </string>
     <string name="button_askride"> Search rides</string>
     <string name="button_offerride"> Offer ride</string>
     <string name="pick_time"> Pick time </string>
@@ -37,7 +37,16 @@
     <string name="title_activity_reserved_post_rides">ReservedPostRides</string>
     <string name="cancel">Cancel</string>
     <string name="approve">Approve</string>
+    <string name="save">Save</string>
+    <string name="please_enter_name_phone"> Please eneter your name and phonenumber</string>
+    <string name="full_name">Full Name</string>
+    <string name="com.lily.pre">com.lily.pre</string>
+    <string name="save_changes">Save Changes</string>
+	<string name="change_your_data">Change your data</string>
     <color name="text_color">#FFF</color>
     <color name="background">#669900</color>
+
+    <string name="title_activity_basic_info">BasicInfoActivity</string>
+    <string name="title_activity_setting">Setting</string>
 
 </resources>

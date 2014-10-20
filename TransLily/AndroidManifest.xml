@@ -50,6 +50,14 @@
             android:name="post.ReservedPostRides"
             android:label="@string/title_activity_reserved_post_rides" >
         </activity>
+        <activity
+            android:name=".BasicInfoActivity"
+            android:label="@string/title_activity_basic_info" >
+        </activity>
+        <activity
+            android:name=".Setting"
+            android:label="@string/title_activity_setting" >
+        </activity>
     </application>
 
 </manifest>

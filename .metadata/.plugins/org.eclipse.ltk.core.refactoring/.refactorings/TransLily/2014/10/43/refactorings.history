@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;TransLily/res/xml&apos; to &apos;XML&apos;" description="Rename resource &apos;xml&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="res/xml" name="XML" stamp="1413833342010" updateReferences="true"/>&#x0A;<refactoring comment="Rename resource &apos;TransLily/res/XML&apos; to &apos;xml&apos;" description="Rename resource &apos;XML&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="res/XML" name="xml" stamp="1413833383048" updateReferences="true"/>
+</session>

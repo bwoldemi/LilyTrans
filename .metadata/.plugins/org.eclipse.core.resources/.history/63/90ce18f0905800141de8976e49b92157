@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <EditTextPreference
+        android:defaultValue="Bereket"
+        android:dialogTitle="@string/full_name"
+        android:key="name"
+        android:summary="Other" />
+    <EditTextPreference
+        android:defaultValue="phone"
+        android:dialogTitle="@string/full_name"
+        android:key="phone"
+        android:summary="Other" />
+
+</PreferenceScreen>

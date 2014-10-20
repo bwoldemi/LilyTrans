@@ -1,0 +1,46 @@
+package com.example.translili;
+
+import android.app.Activity;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.os.Bundle;
+import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
+import android.widget.EditText;
+import android.widget.Toast;
+
+public class Setting extends Activity  {
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_setting);
+		EditText etName= (EditText)findViewById(R.id.et_name_setting);
+		EditText etPhone= (EditText)findViewById(R.id.et_);
+		SharedPreferences sharedPref = Setting.this
+				.getSharedPreferences(getString(R.string.com_lily_pre), 0);
+
+		String name = sharedPref.getString("name", "").trim();
+		String phone = sharedPref.getString("phone", "").trim();
+		
+		
+	}
+	
+	public boolean isPhoneNumberAndNameSaved() {
+
+		SharedPreferences sharedPref = Setting.this
+				.getSharedPreferences(getString(R.string.com_lily_pre), 0);
+
+		String name = sharedPref.getString("name", "").trim();
+		String phone = sharedPref.getString("phone", "").trim();
+
+		if (name.equalsIgnoreCase("") || phone.equalsIgnoreCase("")) {
+			return false;
+		}
+
+		return true;
+	}
+	
+
+
+}
