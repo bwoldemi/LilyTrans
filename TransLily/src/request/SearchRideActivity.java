@@ -1,10 +1,8 @@
 package request;
 
 import java.io.BufferedReader;
-
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -13,79 +11,82 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 
-import com.example.translili.R;
-import com.example.translili.R.id;
-import com.example.translili.R.layout;
-import com.example.translili.R.menu;
-
-import data.Parser;
-import data.ScheduleList;
-
-import android.support.v7.app.ActionBarActivity;
-import android.text.Html;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Message;
+import android.support.v7.app.ActionBarActivity;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.example.translili.R;
+
+import data.LilyUrls;
+import data.Parser;
+import data.ScheduleList;
+
 /**
- * Searching and booking 
+ * Searching and booking
+ * 
  * @author Thinkpad
- *
+ * 
  */
 public class SearchRideActivity extends ActionBarActivity {
 	private Vector<ScheduleList> schedules = null;
 	private ListView listView;
 	private Context mainContext;
 	private TextView userProfile;
-	
-	//user inputs  
+
+	// user inputs
 	private String name = null;
 	private String phonenumber = null;
-	private String from=null;
-	private String to=null;
-	private String date=null;
-	
-	public final static String SEARCH_AVILABLE_TRANSPORTS = "http://tutbereket.net//LiliTransport/search_avilable_transports.php";
-	public final static String BOOKING_URL = "http://tutbereket.net//LiliTransport/insert_user_book.php";
-	
-	
+	private String from = null;
+	private String to = null;
+	private String date = null;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search_ride);
 		userProfile = (TextView) findViewById(R.id.userProfile);
 
-		name = getIntent().getStringExtra("name");
+		SharedPreferences sharedPref = SearchRideActivity.this
+				.getSharedPreferences(getString(R.string.com_lily_pre), 0);
+
+		name = sharedPref.getString("name", "").trim();
+		phonenumber = sharedPref.getString("phone", "").trim();
+
 		from = getIntent().getStringExtra("from");
 		to = getIntent().getStringExtra("to");
-		phonenumber = getIntent().getStringExtra("contact");
 		date = getIntent().getStringExtra("date");
-		//date = "2014-09-27";
+
 		userProfile.setText(Html.fromHtml("Name: " + name + "<br/>" + "From: "
 				+ from + "<br/>" + "To: " + to + "<br/>" + "Phonenumber: "
 				+ phonenumber + "<br/>" + "Date: " + date));
 
 		listView = (ListView) findViewById(R.id.offerList);
 		this.mainContext = this;
-		new SearchAvilableTransports().execute(SEARCH_AVILABLE_TRANSPORTS);
+		new SearchAvilableTransports()
+				.execute(LilyUrls.SEARCH_AVILABLE_TRANSPORTS);
 
 	}
 
@@ -104,21 +105,31 @@ public class SearchRideActivity extends ActionBarActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	public void callNumber(View view) {
+		ImageButton im = (ImageButton) view;
+		String str = (String) im.getTag();
+	
+		Intent callIntent = new Intent(Intent.ACTION_CALL);
+		callIntent.setData(Uri.parse("tel:" + str));
+		startActivity(callIntent);
+
+	}
 	/**
-	 * Request available transports, by day, starting point and destination point
+	 * Request available transports, by day, starting point and destination
+	 * point
 	 * 
 	 * @author Thinkpad
 	 * 
 	 */
 	private class SearchAvilableTransports extends
 			AsyncTask<String, Void, String> {
-		ProgressDialog progressDialog ;
-		
-		
+		ProgressDialog progressDialog;
+
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			progressDialog= ProgressDialog.show(SearchRideActivity.this, "Searching", "Searching Avilable Rides");
+			progressDialog = ProgressDialog.show(SearchRideActivity.this,
+					"Searching", "Searching Avilable Rides");
 		}
 
 		@Override
@@ -128,23 +139,21 @@ public class SearchRideActivity extends ActionBarActivity {
 			try {
 				DefaultHttpClient httpClient = new DefaultHttpClient();
 				System.out.println(params[0]);
-				
+
 				HttpPost httpPost = new HttpPost(params[0]);
 				List<NameValuePair> nameValuePaire = new ArrayList<NameValuePair>(
 						4);
 
 				nameValuePaire.add(new BasicNameValuePair("starting", from));
-				nameValuePaire.add(new BasicNameValuePair("destination",
-						to));
-				nameValuePaire
-						.add(new BasicNameValuePair("date", date));
-				nameValuePaire
-				.add(new BasicNameValuePair("phonenumber", phonenumber));
+				nameValuePaire.add(new BasicNameValuePair("destination", to));
+				nameValuePaire.add(new BasicNameValuePair("date", date));
+				nameValuePaire.add(new BasicNameValuePair("phonenumber",
+						phonenumber));
 				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePaire));
 
 				HttpResponse httpResponse = httpClient.execute(httpPost);
 				HttpEntity httpEntity = httpResponse.getEntity();
-				
+
 				InputStream inputStream = httpEntity.getContent();
 				BufferedReader reader = new BufferedReader(
 						new InputStreamReader(inputStream, "iso-8859-1"), 8);
@@ -177,9 +186,8 @@ public class SearchRideActivity extends ActionBarActivity {
 			}
 			listView.setAdapter(new ScheduleArrayAdapter(mainContext, schedules));
 		}
-	
+
 	}
-	
 
 	/**
 	 * Listview adapter
@@ -190,7 +198,7 @@ public class SearchRideActivity extends ActionBarActivity {
 	private class ScheduleArrayAdapter extends ArrayAdapter<ScheduleList> {
 		Vector<ScheduleList> scheduleList;
 		Context context;
-		
+
 		public ScheduleArrayAdapter(Context context,
 				Vector<ScheduleList> resource) {
 			super(context, R.layout.schedules, resource);
@@ -208,36 +216,37 @@ public class SearchRideActivity extends ActionBarActivity {
 						false);
 			}
 
-			TextView tvServiceGroup = (TextView) convertView
-					.findViewById(R.id.TextViewServiceGroup);
-			TextView tvTaxiId = (TextView) convertView
-					.findViewById(R.id.TextViewGroupID);
-			TextView tvPickUpTime = (TextView) convertView
-					.findViewById(R.id.TextViewPickUpTime);
+			TextView tvServiceInfo = (TextView) convertView
+					.findViewById(R.id.service_provider_info_schedules);
+			 TextView tvPhonenumber = (TextView) convertView
+					.findViewById(R.id.phone_number_schedules);
+			 ImageButton imPhone=(ImageButton)convertView.findViewById(R.id.callImageButton_schedules);
+			TextView tvComment = (TextView) convertView
+					.findViewById(R.id.comment_schedules);
 
-			Button button = (Button) convertView
+			Button reserveButton = (Button) convertView
 					.findViewById(R.id.ButtonStatus);
-			
+			Button cancelButton= (Button)convertView.findViewById(R.id.cancel_button);
 
-			tvServiceGroup
-					.setText(scheduleList.get(position).getServiceGroup());
-			tvTaxiId.setText(scheduleList.get(position).getTaxiID());
+			tvServiceInfo.setText(Html.fromHtml("<b><font color='yellow'>Service Group:</font> </b>" + scheduleList.get(position).getServiceGroup()+ 
+										" <br><b> <font color='yellow'>Taxi Id/Name: </font> </b>"+ scheduleList.get(position).getTaxiID()+
+										" <br><b> <font color='yellow'>Trip: </font></b>"+ scheduleList.get(position).getStartingPoint()+ " To "+scheduleList.get(position).getDestinationPoint()+
+										" <br><b> <font color='yellow'> Pick up time: </font></b>"+ scheduleList.get(position).getPickUpTime()));
+			tvPhonenumber.setText(scheduleList.get(position).getPhonenumber());
+			imPhone.setTag(tvPhonenumber.getText().toString());
 
-			System.out.println(scheduleList.get(position).getPickUpTime());
-			System.out
-					.println(scheduleList.get(position).getNumbureOfPersons());
+			tvComment.setText(Html.fromHtml("<b> <font color='yellow'>Comment: </font></b>"+scheduleList.get(position).getComment()));
+		
+			reserveButton.setTag(scheduleList.get(position).getTransportID());
 
-			tvPickUpTime.setText(scheduleList.get(position).getPickUpTime());
-			button.setTag(scheduleList.get(position).getTransportID());
-			
-			if(scheduleList.get(position).getStatus().equalsIgnoreCase("booked")){
-				button.setText("Booked");
-				button.setTextColor(Color.GREEN);
-				button.setClickable(false);
-			}else{
-				button.setText("Request");
+			if (scheduleList.get(position).getStatus()
+					.equalsIgnoreCase("booked")) {
+				reserveButton.setText("Booked");
+				reserveButton.setTextColor(Color.GREEN);
+				reserveButton.setClickable(false);
+			} else {
+				reserveButton.setText("Request");
 			}
-			
 
 			return convertView;
 		}
@@ -256,28 +265,30 @@ public class SearchRideActivity extends ActionBarActivity {
 		int id = (Integer) button.getTag();
 		new BookRideAsynckTask().execute(id);
 	}
-    public void showMyBookedRides(View view){
-    	Intent intent = new Intent(this, BookedRideActivity.class);
+
+	public void showMyBookedRides(View view) {
+		Intent intent = new Intent(this, BookedRideActivity.class);
 		intent.putExtra("name", name);
 		intent.putExtra("phonenumber", phonenumber);
 		intent.putExtra("date", date);
 		startActivity(intent);
-    }
-    
-    
+	}
+
 	/**
 	 * booking time
 	 * 
 	 * @author Thinkpad
 	 * 
 	 */
-	
+
 	private class BookRideAsynckTask extends AsyncTask<Integer, Void, String> {
 		ProgressDialog progressDialog;
+
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			progressDialog= ProgressDialog.show(SearchRideActivity.this, "Saving", "Saving....");
+			progressDialog = ProgressDialog.show(SearchRideActivity.this,
+					"Saving", "Saving....");
 		}
 
 		@Override
@@ -288,7 +299,7 @@ public class SearchRideActivity extends ActionBarActivity {
 				DefaultHttpClient httpClient = new DefaultHttpClient();
 				System.out.println(params[0]);
 				// get the first argument passed to the execute method
-				HttpPost httpPost = new HttpPost(BOOKING_URL);
+				HttpPost httpPost = new HttpPost(LilyUrls.BOOKING_URL);
 				List<NameValuePair> nameValuePaire = new ArrayList<NameValuePair>(
 						3);
 				nameValuePaire.add(new BasicNameValuePair("name", name));

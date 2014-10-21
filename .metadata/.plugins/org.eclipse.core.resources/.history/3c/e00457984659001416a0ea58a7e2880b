@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#669900"
+    android:orientation="vertical"
+    android:paddingBottom="10dp"
+    android:paddingLeft="3dp"
+    android:paddingTop="10dp" >
+
+    <TextView
+        android:id="@+id/TextViewServiceGroup"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_color"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/TextViewGroupID"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:textColor="#FFF"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/TextViewPickUpTime"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_color"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/TextViewNumberOfPersons"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_color"
+        android:textSize="10sp" />
+
+    <Button
+        android:id="@+id/ButtonStatus"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="bookTransport"
+        android:textColor="@color/text_color"
+        android:textSize="10sp" />
+
+    <Button
+        android:id="@+id/status_request"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="bookTransport"
+        android:textColor="@color/text_color"
+        android:textSize="10sp" />
+
+    <Button
+        android:id="@+id/cancel_requestStatus"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="bookTransport"
+        android:textColor="@color/text_color"
+        android:textSize="15sp" />
+
+</LinearLayout>

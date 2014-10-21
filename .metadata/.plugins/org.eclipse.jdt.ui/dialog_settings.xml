@@ -3,7 +3,7 @@
 	<item value="false" key="TypeHierarchyViewPart.qualifiednames"/>
 	<item value="3" key="TypeHierarchyViewPart.orientation"/>
 	<item value="false" key="TypeHierarchyViewPart.linkeditors"/>
-	<item value="C:\Users\Thinkpad\Desktop\adt-bundle-windows-x86_64-20140702\adt-bundle-windows-x86_64-20140702\sdk\extras\android\support\v7\appcompat\libs" key="org.eclipse.jdt.ui.lastextjar"/>
+	<item value="C:\Users\bereket\Desktop\adt-bundle-windows-x86_64-20140702\adt-bundle-windows-x86_64-20140702\sdk\extras\android\support\v7\appcompat\libs" key="org.eclipse.jdt.ui.lastextjar"/>
 	<item value="2" key="TypeHierarchyViewPart.hierarchyview"/>
 	<section name="org.eclipse.ltk.ui.refactoring.settings">
 		<item value="false" key="renameSubpackages"/>
@@ -69,7 +69,7 @@
 	<section name="quick_assist_proposal_size">
 	</section>
 	<section name="BuildPathsPropertyPage">
-		<item value="3" key="pageIndex"/>
+		<item value="2" key="pageIndex"/>
 	</section>
 	<section name="NewPackageWizardPage">
 		<item value="false" key="create_package_info_java"/>
