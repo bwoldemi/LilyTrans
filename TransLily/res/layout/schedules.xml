@@ -5,7 +5,6 @@
     android:background="#669900"
     android:orientation="vertical"
     android:paddingBottom="10dp"
-    android:paddingLeft="3dp"
     android:paddingTop="10dp" >
 
     <TextView
@@ -25,8 +24,8 @@
             android:id="@+id/callImageButton_schedules"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/call"
-            android:onClick="callNumber" />
+            android:onClick="callNumber"
+            android:src="@drawable/call" />
 
         <TextView
             android:id="@+id/phone_number_schedules"
@@ -43,38 +42,12 @@
         android:textColor="@color/text_color"
         android:textSize="20sp" />
 
-    <LinearLayout
+    <Button
+        android:id="@+id/ButtonStatus"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal" >
-
-        <Button
-            android:id="@+id/ButtonStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="bookTransport"
-            android:padding="10.0dip"
-            android:textColor="@color/text_color"
-            android:textSize="20sp" />
-
-        <Button
-            android:id="@+id/cancel_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="bookTransport"
-            android:padding="10.0dip"
-            android:textColor="@color/text_color"
-            android:textSize="20sp" />
-
-        <Button
-            android:id="@+id/cancel_requestStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="bookTransport"
-            android:padding="10.0dip"
-            android:textColor="@color/text_color"
-            android:textSize="15sp" />
-    </LinearLayout>
+        android:onClick="bookTransport"
+        android:textColor="@color/text_color"
+        android:textSize="20sp" />
 
 </LinearLayout>

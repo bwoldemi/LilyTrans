@@ -46,11 +46,11 @@ public class Parser {
 		for (int i = 0; i < jsonArray.length(); i++) {
 			bookedSchedule = new BookedSchedule();
 			JSONObject object = jsonArray.getJSONObject(i);
-			bookedSchedule.setBookId(Integer.parseInt(object.getString("BookId")));
+			bookedSchedule.setBookId(Integer.parseInt(object.getString("BookID")));
 			bookedSchedule.setName(object.getString("Name"));
 			bookedSchedule.setPhonenumber(object.getString("PhoneNumber"));
 			bookedSchedule.setTransportID(Integer.parseInt(object.getString("ID")));
-			bookedSchedule.setStatus(object.getString("status"));
+			bookedSchedule.setStatus(object.getString("Status"));
 			bookedSchedules.add(bookedSchedule);
 		}
 		return bookedSchedules;

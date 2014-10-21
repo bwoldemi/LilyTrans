@@ -15,15 +15,11 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
-import com.example.translili.R;
-import com.example.translili.R.id;
-import com.example.translili.R.layout;
-import com.example.translili.R.menu;
-
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -39,17 +35,20 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.translili.R;
+
+import data.LilyUrls;
+
 public class PostRideActivity extends ActionBarActivity {
 	private EditText editTextServiceProvider;
 	private EditText editTextTaxiID;
 	private EditText editTextStartingPoint;
 	private EditText editTextDestinationPoint;
 	private EditText editTextNumberOfPerson;
-	private EditText editTextPhoneNumber;
 	private EditText editTextComment;
 	private Button buttonTime;
 	private Button buttonDate;
-	public final static String POST_URL = "http://tutbereket.net//LiliTransport/insert_rides.php";
+	private String phone;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,10 +59,15 @@ public class PostRideActivity extends ActionBarActivity {
 		editTextStartingPoint = (EditText) findViewById(R.id.starting_point_post);
 		editTextDestinationPoint = (EditText) findViewById(R.id.destination_point_post);
 		editTextNumberOfPerson = (EditText) findViewById(R.id.number_of_person_post);
-		editTextPhoneNumber = (EditText) findViewById(R.id.phone_number_post);
 		editTextComment = (EditText) findViewById(R.id.coment_post);
 		buttonTime = (Button) findViewById(R.id.time_picker_post);
 		buttonDate = (Button) findViewById(R.id.date_picker_post);
+
+		SharedPreferences sharedPref = PostRideActivity.this
+				.getSharedPreferences(getString(R.string.com_lily_pre), 0);
+
+		phone = sharedPref.getString("phone", "").trim();
+
 	}
 
 	@Override
@@ -200,16 +204,17 @@ public class PostRideActivity extends ActionBarActivity {
 			String startingPoint = editTextStartingPoint.getText().toString();
 			String destination = editTextDestinationPoint.getText().toString();
 			String numberOfPerson = editTextNumberOfPerson.getText().toString();
-			String phoneNumber = editTextPhoneNumber.getText().toString();
+
 			String comment = editTextComment.getText().toString();
 			String pickUpTime = buttonTime.getText().toString();
 			String date = buttonDate.getText().toString();
 
 			new PostRidesAsynckTask().execute(serviceProvider, taxiId,
-					startingPoint, destination, phoneNumber, pickUpTime, date,
+					startingPoint, destination, phone, pickUpTime, date,
 					numberOfPerson, comment);
 		} else {
-			Toast.makeText(this, "Please complete the forms", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Please complete the forms",
+					Toast.LENGTH_SHORT).show();
 		}
 
 	}
@@ -252,7 +257,7 @@ public class PostRideActivity extends ActionBarActivity {
 						.add(new BasicNameValuePair("comment", params[8]));
 
 				DefaultHttpClient httpClient = new DefaultHttpClient();
-				HttpPost httpPost = new HttpPost(POST_URL);
+				HttpPost httpPost = new HttpPost(LilyUrls.POST_URL);
 				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePaire));
 
 				HttpResponse httpResponse = httpClient.execute(httpPost);

@@ -22,6 +22,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -41,16 +42,18 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.translili.R;
 
+import data.LilyUrls;
 import data.Parser;
 import data.ScheduleList;
 
 public class MyPostedRides extends ActionBarActivity {
 	private EditText phoneNumber;
 	private Button date;
-	private final static  String URL_FOR_SEARCHING_POST_RIDES="http://tutbereket.net/LiliTransport/posted_rides.php";
+
 	private ListView listView;
 	
 	@Override
@@ -58,7 +61,16 @@ public class MyPostedRides extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_my_post_rides);
 		date = (Button) findViewById(R.id.date_picker_my_post);
+
+		SharedPreferences sharedPref = MyPostedRides.this
+				.getSharedPreferences(getString(R.string.com_lily_pre), 0);
+
+		
+		String phone = sharedPref.getString("phone", "").trim();
+		 
 		phoneNumber = (EditText) findViewById(R.id.phone_number_my_post);
+		phoneNumber.setText(phone);
+		phoneNumber.setEnabled(false);
 		listView= (ListView)findViewById(R.id.my_posted_list);
 		
 		listView.setOnItemClickListener(new OnItemClickListener() {
@@ -71,6 +83,7 @@ public class MyPostedRides extends ActionBarActivity {
 				Intent intent = new Intent(MyPostedRides.this, ReservedPostRides.class);
 				
 				intent.putExtra("serviceGroup",sd.getServiceGroup());
+				intent.putExtra("name",sd.getTaxiID());
 				intent.putExtra("id", sd.getTransportID());
 				intent.putExtra("starting", sd.getStartingPoint());
 				intent.putExtra("destination", sd.getDestinationPoint());
@@ -100,7 +113,12 @@ public class MyPostedRides extends ActionBarActivity {
 	}
 
 	public void retivePostRides(View view) {
+		
 		String d = date.getText().toString();
+		if(d.equalsIgnoreCase("pick date")){
+			Toast.makeText(this, "Please select date", Toast.LENGTH_SHORT).show();
+			return;
+		}
 		String phone = phoneNumber.getText().toString();
 		new SearchMyPostAsynckTask().execute(phone,d);
 	}
@@ -170,7 +188,7 @@ public class MyPostedRides extends ActionBarActivity {
 				
 
 				DefaultHttpClient httpClient = new DefaultHttpClient();
-				HttpPost httpPost = new HttpPost(URL_FOR_SEARCHING_POST_RIDES);
+				HttpPost httpPost = new HttpPost(LilyUrls.URL_FOR_SEARCHING_POST_RIDES);
 				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePaire));
 
 				HttpResponse httpResponse = httpClient.execute(httpPost);

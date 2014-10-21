@@ -30,7 +30,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
+
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -107,13 +107,18 @@ public class SearchRideActivity extends ActionBarActivity {
 
 	public void callNumber(View view) {
 		ImageButton im = (ImageButton) view;
-		String str = (String) im.getTag();
-	
-		Intent callIntent = new Intent(Intent.ACTION_CALL);
-		callIntent.setData(Uri.parse("tel:" + str));
-		startActivity(callIntent);
 
+		try {
+			String str = (String) im.getTag();
+
+			Intent callIntent = new Intent(Intent.ACTION_CALL);
+			callIntent.setData(Uri.parse("tel:" + str));
+			startActivity(callIntent);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
+
 	/**
 	 * Request available transports, by day, starting point and destination
 	 * point
@@ -218,34 +223,60 @@ public class SearchRideActivity extends ActionBarActivity {
 
 			TextView tvServiceInfo = (TextView) convertView
 					.findViewById(R.id.service_provider_info_schedules);
-			 TextView tvPhonenumber = (TextView) convertView
+			TextView tvPhonenumber = (TextView) convertView
 					.findViewById(R.id.phone_number_schedules);
-			 ImageButton imPhone=(ImageButton)convertView.findViewById(R.id.callImageButton_schedules);
+			ImageButton imPhone = (ImageButton) convertView
+					.findViewById(R.id.callImageButton_schedules);
 			TextView tvComment = (TextView) convertView
 					.findViewById(R.id.comment_schedules);
 
 			Button reserveButton = (Button) convertView
 					.findViewById(R.id.ButtonStatus);
-			Button cancelButton= (Button)convertView.findViewById(R.id.cancel_button);
 
-			tvServiceInfo.setText(Html.fromHtml("<b><font color='yellow'>Service Group:</font> </b>" + scheduleList.get(position).getServiceGroup()+ 
-										" <br><b> <font color='yellow'>Taxi Id/Name: </font> </b>"+ scheduleList.get(position).getTaxiID()+
-										" <br><b> <font color='yellow'>Trip: </font></b>"+ scheduleList.get(position).getStartingPoint()+ " To "+scheduleList.get(position).getDestinationPoint()+
-										" <br><b> <font color='yellow'> Pick up time: </font></b>"+ scheduleList.get(position).getPickUpTime()));
+			tvServiceInfo
+					.setText(Html
+							.fromHtml("<b><font color='yellow'>Service Group:</font> </b>"
+									+ scheduleList.get(position)
+											.getServiceGroup()
+									+ " <br><b> <font color='yellow'>Taxi Id/Name: </font> </b>"
+									+ scheduleList.get(position).getTaxiID()
+									+ " <br><b> <font color='yellow'>Trip: </font></b>"
+									+ scheduleList.get(position)
+											.getStartingPoint()
+									+ " To "
+									+ scheduleList.get(position)
+											.getDestinationPoint()
+									+ " <br><b> <font color='yellow'> Pick up time: </font></b>"
+									+ scheduleList.get(position)
+											.getPickUpTime()));
 			tvPhonenumber.setText(scheduleList.get(position).getPhonenumber());
 			imPhone.setTag(tvPhonenumber.getText().toString());
 
-			tvComment.setText(Html.fromHtml("<b> <font color='yellow'>Comment: </font></b>"+scheduleList.get(position).getComment()));
-		
+			tvComment.setText(Html
+					.fromHtml("<b> <font color='yellow'>Comment: </font></b>"
+							+ scheduleList.get(position).getComment()));
+
 			reserveButton.setTag(scheduleList.get(position).getTransportID());
 
 			if (scheduleList.get(position).getStatus()
-					.equalsIgnoreCase("booked")) {
-				reserveButton.setText("Booked");
+					.equalsIgnoreCase("Approved")) {
+				reserveButton.setText("Approved: Click to cancel request");
 				reserveButton.setTextColor(Color.GREEN);
-				reserveButton.setClickable(false);
+
+			} else if (scheduleList.get(position).getStatus()
+					.equalsIgnoreCase("Canceled")) {
+
+				reserveButton.setText("Request Canceled: ");
+				reserveButton.setTextColor(Color.RED);
+
+			} else if (scheduleList.get(position).getStatus()
+					.equalsIgnoreCase("Waiting")) {
+				reserveButton.setText("Waiting : Click to cancel request");
+				reserveButton.setTextColor(Color.DKGRAY);
+
 			} else {
 				reserveButton.setText("Request");
+
 			}
 
 			return convertView;
@@ -259,11 +290,19 @@ public class SearchRideActivity extends ActionBarActivity {
 	 */
 	public void bookTransport(View view) {
 		Button button = (Button) view;
-		button.setText("Booked");
-		button.setTextColor(Color.GREEN);
-		button.setClickable(false);
 		int id = (Integer) button.getTag();
-		new BookRideAsynckTask().execute(id);
+		if (button.getText().toString().equalsIgnoreCase("Request")) {
+			button.setText("Wating: Cancel Request");
+			button.setTextColor(Color.DKGRAY);
+
+			new BookRideAsynckTask().execute(id);
+		} else {
+			button.setText("Request");
+			button.setTextColor(getResources().getColor(R.color.text_color));
+
+			new CancelRideAsynckTask().execute(id);
+		}
+
 	}
 
 	public void showMyBookedRides(View view) {
@@ -297,16 +336,17 @@ public class SearchRideActivity extends ActionBarActivity {
 			String content = null;
 			try {
 				DefaultHttpClient httpClient = new DefaultHttpClient();
-				System.out.println(params[0]);
-				// get the first argument passed to the execute method
+
 				HttpPost httpPost = new HttpPost(LilyUrls.BOOKING_URL);
 				List<NameValuePair> nameValuePaire = new ArrayList<NameValuePair>(
 						3);
 				nameValuePaire.add(new BasicNameValuePair("name", name));
 				nameValuePaire.add(new BasicNameValuePair("phonenumber",
 						phonenumber));
+				nameValuePaire.add(new BasicNameValuePair("status", "Waiting"));
 				nameValuePaire.add(new BasicNameValuePair("id", Integer
 						.toString(params[0])));
+
 				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePaire));
 
 				HttpResponse httpResponse = httpClient.execute(httpPost);
@@ -327,7 +367,6 @@ public class SearchRideActivity extends ActionBarActivity {
 				ex.printStackTrace();
 				return null;
 			}
-
 		}
 
 		@Override
@@ -338,4 +377,62 @@ public class SearchRideActivity extends ActionBarActivity {
 
 	}
 
+	// for cancling the app
+	private class CancelRideAsynckTask extends AsyncTask<Integer, Void, String> {
+		ProgressDialog progressDialog;
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			progressDialog = ProgressDialog.show(SearchRideActivity.this,
+					"Saving", "Saving....");
+		}
+
+		@Override
+		protected String doInBackground(Integer... params) {
+			// TODO Auto-generated method stub
+			String content = null;
+			try {
+				DefaultHttpClient httpClient = new DefaultHttpClient();
+
+				HttpPost httpPost = new HttpPost(
+						LilyUrls.USER_CANCEL_REQUEST_URL);
+				List<NameValuePair> nameValuePaire = new ArrayList<NameValuePair>(
+						2);
+
+				nameValuePaire.add(new BasicNameValuePair("id", Integer
+						.toString(params[0])));
+				nameValuePaire
+						.add(new BasicNameValuePair("phone", phonenumber));
+
+				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePaire));
+
+				HttpResponse httpResponse = httpClient.execute(httpPost);
+				HttpEntity httpEntity = httpResponse.getEntity();
+				InputStream inputStream = httpEntity.getContent();
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(inputStream, "iso-8859-1"), 8);
+				StringBuffer stringBuffer = new StringBuffer();
+				String line = null;
+				while ((line = reader.readLine()) != null) {
+					stringBuffer.append(line);
+				}
+				inputStream.close(); // free memory
+
+				content = stringBuffer.toString();
+				return content;
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				return null;
+			}
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			System.out.println(result);
+
+			progressDialog.dismiss();
+		}
+
+	}
 }

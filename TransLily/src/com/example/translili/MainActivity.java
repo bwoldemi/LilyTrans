@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -40,8 +41,10 @@ public class MainActivity extends Activity {
 	}
 
 	public void myRequestRides(View view) {
-		Intent intent = new Intent(this, BookedRideActivity.class);
-		startActivity(intent);
+//		Intent intent = new Intent(this, BookedRideActivity.class);
+//		startActivity(intent);
+		//TODO
+		Toast.makeText(this, "To Do", Toast.LENGTH_LONG).show();
 
 	}
 
