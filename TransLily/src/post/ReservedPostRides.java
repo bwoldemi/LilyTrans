@@ -1,4 +1,5 @@
 package post;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -17,6 +18,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
@@ -26,6 +29,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -39,33 +43,36 @@ import data.LilyUrls;
 import data.Parser;
 
 public class ReservedPostRides extends Activity {
-	
-	Vector<BookedSchedule> bookedSchedules;
-	ListView listView;
 
+	Vector<BookedSchedule> bookedSchedules=null;
+	ListView listView;
+	int transportId;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_reserved_post_rides);
-	
-		listView=(ListView)findViewById(R.id.listView_reserved_post);
-		
-		TextView tv = (TextView) findViewById(R.id.tv_ride_post_info);
-		
-		String serviceGroup = getIntent().getStringExtra("serviceGroup");
-		String name = getIntent().getStringExtra("name");
-		String starting = getIntent().getStringExtra("starting");
-		String destination=  getIntent().getStringExtra("destination");
+		bookedSchedules= new Vector<BookedSchedule>();
 
-		tv.setText(Html.fromHtml("<b> Service Group: </b>" + serviceGroup
-				+ "<b> <br> Name: </b>" + name + "<b> <br> Starting : </b>"
-				+ starting + "<b> <br> Destination: </b>" + destination));
+		listView = (ListView) findViewById(R.id.listView_reserved_post);
+		listView.setAdapter(new ReservedPostRidesArrayAdapter(
+				ReservedPostRides.this, bookedSchedules));
 		
-		int transportId=getIntent().getIntExtra("id", 0);
+//		String serviceGroup = getIntent().getStringExtra("serviceGroup");
+//		String name = getIntent().getStringExtra("name");
+//		String starting = getIntent().getStringExtra("starting");
+//		String destination = getIntent().getStringExtra("destination");
 		
-		if(transportId!=0){
-			 new SearchMyPostAsynckTask().execute(Integer.toString(transportId));
-		 }
+//		TextView tv = (TextView) findViewById(R.id.tv_ride_post_info);
+//
+//		tv.setText(Html.fromHtml("<b> Service Group: </b>" + serviceGroup
+//				+ "<b> <br> Name: </b>" + name + "<b> <br> Starting : </b>"
+//				+ starting + "<b> <br> Destination: </b>" + destination));
+
+		 transportId = getIntent().getIntExtra("id", 0);
+
+		if (transportId != 0) {
+			new SearchMyPostAsynckTask().execute(Integer.toString(transportId));
+		}
 	}
 
 	@Override
@@ -87,12 +94,14 @@ public class ReservedPostRides extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	private class SearchMyPostAsynckTask extends AsyncTask<String, Void, String> {
+	private class SearchMyPostAsynckTask extends
+			AsyncTask<String, Void, String> {
 		ProgressDialog progressDialog;
 
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
+			((BaseAdapter) listView.getAdapter()).notifyDataSetChanged();	
 			progressDialog = ProgressDialog.show(ReservedPostRides.this,
 					"Searching", "Searching ride requesting users....");
 		}
@@ -103,12 +112,11 @@ public class ReservedPostRides extends Activity {
 			String content = null;
 			try {
 
-			
-
 				List<NameValuePair> nameValuePaire = new ArrayList<NameValuePair>(
 						1);
 
-				nameValuePaire.add(new BasicNameValuePair("transport_id", params[0]));
+				nameValuePaire.add(new BasicNameValuePair("transport_id",
+						params[0]));
 				System.out.println(params[0]);
 				DefaultHttpClient httpClient = new DefaultHttpClient();
 				HttpPost httpPost = new HttpPost(LilyUrls.URL_RESERVED_RIDES);
@@ -137,24 +145,25 @@ public class ReservedPostRides extends Activity {
 
 		@Override
 		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
 			progressDialog.setMessage(result);
 			progressDialog.dismiss();
 			try {
 				bookedSchedules = Parser.parseBookedRides(result);
 				listView.setAdapter(new ReservedPostRidesArrayAdapter(ReservedPostRides.this, bookedSchedules));
+				
 				System.out.println(result);
-
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 		}
 
 	}
 
 	private class ReservedPostRidesArrayAdapter extends ArrayAdapter<BookedSchedule> {
-		
+
 		Vector<BookedSchedule> bookedRides;
 		Context context;
 
@@ -171,36 +180,151 @@ public class ReservedPostRides extends Activity {
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 			if (convertView == null) {
-				convertView = inflator.inflate(R.layout.list_user_books, parent,
-						false);
+				convertView = inflator.inflate(R.layout.list_user_books,
+						parent, false);
+			}
+
+			TextView tvUserInfo = (TextView) convertView.findViewById(R.id.tv_name_rserved_post_rides);
+			Button approveButton = (Button) convertView.findViewById(R.id.button_approve_rserved_post_rides);
+			
+			
+			Button cancelButton = (Button) convertView.findViewById(R.id.button_cancel_rserved_post_rides);
+			
+			if(bookedRides.get(position).getStatus().equalsIgnoreCase("approved")){
+				tvUserInfo.setText(Html.fromHtml("<font color='yellow'> Name: </font>"+bookedRides.get(position).getName()+
+						"<br>  "+"<font color='yellow'> Status: </font><font color='green'>"+ bookedRides.get(position).getStatus()+"</font>"));
+				
+				approveButton.setTag(bookedRides.get(position).getBookId());
+				approveButton.setTextColor(Color.GREEN);
+				approveButton.setClickable(false);
+				approveButton.setText("Approved");
+				cancelButton.setTag(bookedRides.get(position).getBookId());
+				cancelButton.setText("Cancel");
+
+
+			}else if(bookedRides.get(position).getStatus().equalsIgnoreCase("cancled")){
+				tvUserInfo.setText(Html.fromHtml("<font color='yellow'> Name: </font>"+bookedRides.get(position).getName()+" "+
+						"<br/><font color='yellow'> Status: </font><font color='red'>"+ bookedRides.get(position).getStatus()+"</font>"));
+				approveButton.setTag(bookedRides.get(position).getBookId());
+				approveButton.setText("Approve");
+				
+				cancelButton.setTag(bookedRides.get(position).getBookId());
+				cancelButton.setTextColor(Color.RED);
+				cancelButton.setClickable(false);
+				cancelButton.setText("Canceled");
+
+
+			}else {
+				tvUserInfo.setText(Html.fromHtml("<font color='yellow'> Name: </font>"+bookedRides.get(position).getName()+
+						"<br/><font color='yellow'> Status: </font>"+ bookedRides.get(position).getStatus()));
+				approveButton.setTag(bookedRides.get(position).getBookId());
+				approveButton.setText("Approve");
+				
+				cancelButton.setTag(bookedRides.get(position).getBookId());
+				cancelButton.setText("Cancel");
+
 			}
 			
-			TextView tvUserInfo= (TextView)convertView.findViewById(R.id.tv_name_rserved_post_rides);
-			tvUserInfo.setText(bookedRides.get(position).getName());
-			
-			ImageButton ibPhone=(ImageButton)convertView.findViewById(R.id.callImageButton_user);
-			TextView tvPhoneNumber=(TextView)convertView.findViewById(R.id.tv_phonenuber_rserved_post_rides);
-			
+			ImageButton ibPhone = (ImageButton) convertView
+					.findViewById(R.id.callImageButton_user);
+			TextView tvPhoneNumber = (TextView) convertView
+					.findViewById(R.id.tv_phonenuber_rserved_post_rides);
+
 			tvPhoneNumber.setText(bookedRides.get(position).getPhonenumber());
 			ibPhone.setTag(bookedRides.get(position).getPhonenumber());
+
 			
-			Button approveButton= (Button)convertView.findViewById(R.id.button_approve_rserved_post_rides);
-			approveButton.setTag(bookedRides.get(position).getBookId());
-			
-			Button cancelButton=(Button)convertView.findViewById(R.id.button_cancel_rserved_post_rides);
-			cancelButton.setTag(bookedRides.get(position).getBookId());
 			
 			return convertView;
 		}
 	}
-	
-	public void approveRequest(View view){
+
+	public void approveRequest(View view) {
+		Button button=(Button)view;
+		int bookedid= (Integer)button.getTag();
+		new ChangeRequestRideAsynckTask().execute(Integer.toString(bookedid), "Approved");
 		
+		button.setText("Approved");
+		button.setTextColor(Color.GREEN);
+		button.setClickable(false);
 	}
-	public void cancelRequest(View view){
+
+	public void cancelRequest(View view) {
+		Button button=(Button)view;
+		int bookedid= (Integer)button.getTag();
+		new ChangeRequestRideAsynckTask().execute(Integer.toString(bookedid), "Cancled");
 		
+		button.setTextColor(Color.RED);
+		button.setText("Cancled");
+		
+		button.setClickable(false);
 	}
-	public void callNumberCustomer(View view){
-		
+
+	public void callNumberCustomer(View view) {
+		ImageButton im = (ImageButton) view;
+
+		try {
+			String str = (String) im.getTag();
+
+			Intent callIntent = new Intent(Intent.ACTION_CALL);
+			callIntent.setData(Uri.parse("tel:" + str));
+			startActivity(callIntent);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	private class ChangeRequestRideAsynckTask extends AsyncTask<String, Void, String> {
+		ProgressDialog progressDialog;
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			progressDialog = ProgressDialog.show(ReservedPostRides.this,
+					"Saving", "Saving....");
+		}
+
+		@Override
+		protected String doInBackground(String... params) {
+			// TODO Auto-generated method stub
+			String content = null;
+			try {
+				List<NameValuePair> nameValuePaire = new ArrayList<NameValuePair>(
+						2);
+				nameValuePaire.add(new BasicNameValuePair("bookid", params[0]));
+				nameValuePaire.add(new BasicNameValuePair("status", params[1]));
+				DefaultHttpClient httpClient = new DefaultHttpClient();
+				HttpPost httpPost = new HttpPost(LilyUrls.URL_APPROVE_CANCEL_REQUEST);
+				
+				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePaire));
+
+				HttpResponse httpResponse = httpClient.execute(httpPost);
+				HttpEntity httpEntity = httpResponse.getEntity();
+				InputStream inputStream = httpEntity.getContent();
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(inputStream, "iso-8859-1"), 8);
+				StringBuffer stringBuffer = new StringBuffer();
+				String line = null;
+				while ((line = reader.readLine()) != null) {
+					stringBuffer.append(line);
+				}
+				inputStream.close(); // free memory
+
+				content = stringBuffer.toString();
+				return content;
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				return null;
+			}
+
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			progressDialog.dismiss();
+			System.out.println(result);
+			new SearchMyPostAsynckTask().execute(Integer.toString(transportId));
+		}
+
 	}
 }

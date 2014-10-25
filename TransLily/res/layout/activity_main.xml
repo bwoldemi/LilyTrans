@@ -13,17 +13,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
-        <TextView 
+
+        <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/welcome_message"
-            android:textSize="30sp"
             android:layout_margin="5dp"
-            android:textColor="#FFF"
             android:gravity="center"
-            />
+            android:text="@string/welcome_message"
+            android:textColor="#FFF"
+            android:textSize="30sp" />
 
-      <Button
+        <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20sp"

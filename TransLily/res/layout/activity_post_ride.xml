@@ -36,9 +36,9 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10sp"
-            android:padding="10sp"
             android:background="@drawable/abc_ab_stacked_solid_dark_holo"
             android:hint="@string/typein_name"
+            android:padding="10sp"
             android:textColor="#FFF" />
 
         <TextView
@@ -54,9 +54,9 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10sp"
-             android:padding="10sp"
             android:background="@drawable/abc_ab_stacked_solid_dark_holo"
             android:hint="@string/starting_location"
+            android:padding="10sp"
             android:textColor="#FFF" />
 
         <TextView
@@ -72,9 +72,9 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10sp"
-             android:padding="10sp"
             android:background="@drawable/abc_ab_stacked_solid_dark_holo"
             android:hint="@string/ending_location"
+            android:padding="10sp"
             android:textColor="#FFF" />
 
         <TextView
@@ -84,14 +84,15 @@
             android:text="@string/destination"
             android:textColor="#FFF"
             android:textSize="20sp" />
-         <EditText
+
+        <EditText
             android:id="@+id/destination_point_post"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10sp"
-             android:padding="10sp"
             android:background="@drawable/abc_ab_stacked_solid_dark_holo"
             android:hint="@string/ending_location"
+            android:padding="10sp"
             android:textColor="#FFF" />
 
         <TextView
@@ -101,18 +102,18 @@
             android:text="@string/number_of_person"
             android:textColor="#FFF"
             android:textSize="20sp" />
-         <EditText
+
+        <EditText
             android:id="@+id/number_of_person_post"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10sp"
-            android:inputType="number"
-            android:padding="10sp"
             android:background="@drawable/abc_ab_stacked_solid_dark_holo"
             android:hint="@string/ending_location"
+            android:inputType="number"
+            android:padding="10sp"
             android:textColor="#FFF" />
 
-      
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -125,10 +126,10 @@
             android:id="@+id/coment_post"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:padding="10sp"
             android:layout_marginBottom="10sp"
             android:background="@drawable/abc_ab_stacked_solid_dark_holo"
-         	            android:inputType="textShortMessage"
+            android:inputType="textShortMessage"
+            android:padding="10sp"
             android:textColor="#FFF" />
 
         <Button
@@ -140,7 +141,7 @@
             android:onClick="showTimePickerDialog"
             android:text="@string/pick_time"
             android:textColor="#FFF" />
-        
+
         <Button
             android:id="@+id/date_picker_post"
             android:layout_width="fill_parent"

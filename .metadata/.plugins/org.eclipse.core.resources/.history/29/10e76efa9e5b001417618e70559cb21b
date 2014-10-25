@@ -1,0 +1,206 @@
+package post;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.text.Html;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.example.translili.R;
+import com.example.translili.Setting;
+
+import data.BookedSchedule;
+import data.LilyUrls;
+import data.Parser;
+
+public class ReservedPostRides extends Activity {
+	
+	Vector<BookedSchedule> bookedSchedules;
+	ListView listView;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_reserved_post_rides);
+	
+		listView=(ListView)findViewById(R.id.listView_reserved_post);
+		
+		TextView tv = (TextView) findViewById(R.id.tv_ride_post_info);
+		
+		String serviceGroup = getIntent().getStringExtra("serviceGroup");
+		String name = getIntent().getStringExtra("name");
+		String starting = getIntent().getStringExtra("starting");
+		String destination=  getIntent().getStringExtra("destination");
+
+		tv.setText(Html.fromHtml("<b> Service Group: </b>" + serviceGroup
+				+ "<b> <br> Name: </b>" + name + "<b> <br> Starting : </b>"
+				+ starting + "<b> <br> Destination: </b>" + destination));
+		
+		int transportId=getIntent().getIntExtra("id", 0);
+		
+		if(transportId!=0){
+			 new SearchMyPostAsynckTask().execute(Integer.toString(transportId));
+		 }
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+
+		getMenuInflater().inflate(R.menu.reserved_post_rides, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		int id = item.getItemId();
+		if (id == R.id.action_settings) {
+			Intent intent = new Intent(this, Setting.class);
+			startActivity(intent);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	private class SearchMyPostAsynckTask extends AsyncTask<String, Void, String> {
+		ProgressDialog progressDialog;
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			progressDialog = ProgressDialog.show(ReservedPostRides.this,
+					"Searching", "Searching ride requesting users....");
+		}
+
+		@Override
+		protected String doInBackground(String... params) {
+			// TODO Auto-generated method stub
+			String content = null;
+			try {
+
+			
+
+				List<NameValuePair> nameValuePaire = new ArrayList<NameValuePair>(
+						1);
+
+				nameValuePaire.add(new BasicNameValuePair("transport_id", params[0]));
+				System.out.println(params[0]);
+				DefaultHttpClient httpClient = new DefaultHttpClient();
+				HttpPost httpPost = new HttpPost(LilyUrls.URL_RESERVED_RIDES);
+				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePaire));
+
+				HttpResponse httpResponse = httpClient.execute(httpPost);
+				HttpEntity httpEntity = httpResponse.getEntity();
+				InputStream inputStream = httpEntity.getContent();
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(inputStream, "iso-8859-1"), 8);
+				StringBuffer stringBuffer = new StringBuffer();
+				String line = null;
+				while ((line = reader.readLine()) != null) {
+					stringBuffer.append(line);
+				}
+				inputStream.close(); // free memory
+
+				content = stringBuffer.toString();
+				return content;
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				return null;
+			}
+
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			progressDialog.setMessage(result);
+			progressDialog.dismiss();
+			try {
+				bookedSchedules = Parser.parseBookedRides(result);
+				listView.setAdapter(new ReservedPostRidesArrayAdapter(ReservedPostRides.this, bookedSchedules));
+				System.out.println(result);
+
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+
+	}
+
+	private class ReservedPostRidesArrayAdapter extends ArrayAdapter<BookedSchedule> {
+		
+		Vector<BookedSchedule> bookedRides;
+		Context context;
+
+		public ReservedPostRidesArrayAdapter(Context context,
+				Vector<BookedSchedule> resource) {
+			super(context, R.layout.list_user_books, resource);
+			this.bookedRides = resource;
+			this.context = context;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			LayoutInflater inflator = (LayoutInflater) context
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+			if (convertView == null) {
+				convertView = inflator.inflate(R.layout.list_user_books, parent,
+						false);
+			}
+			
+			TextView tvUserInfo= (TextView)convertView.findViewById(R.id.tv_name_rserved_post_rides);
+			tvUserInfo.setText(bookedRides.get(position).getName());
+			
+			ImageButton ibPhone=(ImageButton)convertView.findViewById(R.id.callImageButton_user);
+			TextView tvPhoneNumber=(TextView)convertView.findViewById(R.id.tv_phonenuber_rserved_post_rides);
+			
+			tvPhoneNumber.setText(bookedRides.get(position).getPhonenumber());
+			ibPhone.setTag(bookedRides.get(position).getPhonenumber());
+			
+			Button approveButton= (Button)convertView.findViewById(R.id.button_approve_rserved_post_rides);
+			approveButton.setTag(bookedRides.get(position).getBookId());
+			
+			Button cancelButton=(Button)convertView.findViewById(R.id.button_cancel_rserved_post_rides);
+			cancelButton.setTag(bookedRides.get(position).getBookId());
+			
+			return convertView;
+		}
+	}
+	
+	public void approveRequest(View view){
+		
+	}
+	public void cancelRequest(View view){
+		
+	}
+	public void callNumberCustomer(View view){
+		
+	}
+}

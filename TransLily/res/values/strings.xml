@@ -42,7 +42,8 @@
     <string name="full_name">Full Name</string>
     <string name="com.lily.pre">com.lily.pre</string>
     <string name="save_changes">Save Changes</string>
-	<string name="change_your_data">Change your data</string>
+    <string name="change_your_data">Change your data</string>
+
     <color name="text_color">#FFF</color>
     <color name="background">#669900</color>
 

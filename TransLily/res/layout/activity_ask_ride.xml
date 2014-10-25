@@ -23,7 +23,6 @@
             android:textColor="#FFF"
             android:textSize="30sp" />
 
-      
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -37,9 +36,9 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10sp"
-             android:padding="10sp"
             android:background="@drawable/abc_ab_stacked_solid_dark_holo"
             android:hint="@string/starting_location"
+            android:padding="10sp"
             android:textColor="#FFF" />
 
         <TextView
@@ -55,11 +54,10 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10sp"
-             android:padding="10sp"
             android:background="@drawable/abc_ab_stacked_solid_dark_holo"
             android:hint="@string/ending_location"
+            android:padding="10sp"
             android:textColor="#FFF" />
-
 
         <Button
             android:id="@+id/datePicker"

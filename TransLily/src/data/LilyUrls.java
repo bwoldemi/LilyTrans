@@ -7,4 +7,5 @@ public class LilyUrls {
 	public final static String POST_URL = "http://tutbereket.net//LiliTransport/insert_rides.php";
 	public final static  String URL_FOR_SEARCHING_POST_RIDES="http://tutbereket.net/LiliTransport/posted_rides.php";
 	public final static String URL_RESERVED_RIDES ="http://tutbereket.net/LiliTransport/search_booked_rides_by_id.php";
+	public final static String URL_APPROVE_CANCEL_REQUEST="http://tutbereket.net/LiliTransport/provider_approve_cancel_request.php";
 }

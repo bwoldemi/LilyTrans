@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" 
-    >
-    <EditTextPreference
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <EditTextPreference
         android:dialogTitle="@string/full_name"
         android:key="name"
         android:summary="Other" />
@@ -9,10 +9,9 @@
         android:dialogTitle="@string/full_name"
         android:key="phone"
         android:summary="Other" />
-      <Preference 
-            android:key="name"
-          
-         
-            android:title="pref_title_sms_delete" />
+
+    <Preference
+        android:key="name"
+        android:title="pref_title_sms_delete" />
 
 </PreferenceScreen>

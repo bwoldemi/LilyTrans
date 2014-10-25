@@ -3,7 +3,6 @@ package com.example.translili;
 import post.MyPostedRides;
 import post.PostRideActivity;
 import request.AskRideActivity;
-import request.BookedRideActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,7 +25,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		//checkNamePhoneNumberSaved();
+		// checkNamePhoneNumberSaved();
 	}
 
 	public void requestRide(View view) {
@@ -41,9 +40,9 @@ public class MainActivity extends Activity {
 	}
 
 	public void myRequestRides(View view) {
-//		Intent intent = new Intent(this, BookedRideActivity.class);
-//		startActivity(intent);
-		//TODO
+		// Intent intent = new Intent(this, BookedRideActivity.class);
+		// startActivity(intent);
+		// TODO
 		Toast.makeText(this, "To Do", Toast.LENGTH_LONG).show();
 
 	}
@@ -79,8 +78,6 @@ public class MainActivity extends Activity {
 
 		String name = sharedPref.getString("name", "").trim();
 		String phone = sharedPref.getString("phone", "").trim();
-		System.out.println(name);
-		System.out.println(phone + "****************");
 		if (name.equalsIgnoreCase("") || phone.equalsIgnoreCase("")) {
 			Intent intent = new Intent(this, BasicInfoActivity.class);
 			startActivity(intent);

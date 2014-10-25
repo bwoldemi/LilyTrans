@@ -36,7 +36,6 @@
         android:hint="@string/phone_number"
         android:inputType="phone"
         android:padding="10sp"
-        
         android:textColor="#FFF" />
 
     <Button

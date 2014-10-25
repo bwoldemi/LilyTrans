@@ -954,6 +954,7 @@ containing a value of this type.
          Example customization of dimensions originally defined in res/values/dimens.xml
          (such as screen margins) for screens with more than 820dp of available width. This
          would include 7" and 10" devices in landscape (~960dp and ~1280dp respectively).
+
     
          */
         public static final int activity_horizontal_margin=0x7f090015;
@@ -1079,11 +1080,11 @@ containing a value of this type.
         public static final int abc_textfield_searchview_holo_light=0x7f020054;
         public static final int abc_textfield_searchview_right_holo_dark=0x7f020055;
         public static final int abc_textfield_searchview_right_holo_light=0x7f020056;
-        public static final int call=0x7f020057;
+        public static final int dial_phone_telephone_call_widgets_waiting=0x7f020057;
         public static final int ic_launcher=0x7f020058;
     }
     public static final class id {
-        public static final int ButtonStatus=0x7f060064;
+        public static final int ButtonStatus=0x7f060063;
         public static final int action_bar=0x7f06001c;
         public static final int action_bar_activity_content=0x7f060015;
         public static final int action_bar_container=0x7f06001b;
@@ -1095,19 +1096,19 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f060016;
         public static final int action_menu_presenter=0x7f060017;
         public static final int action_mode_close_button=0x7f060024;
-        public static final int action_settings=0x7f060065;
+        public static final int action_settings=0x7f060064;
         public static final int activity_chooser_view_content=0x7f060025;
         public static final int always=0x7f06000b;
         public static final int beginning=0x7f060011;
         public static final int bookedRidesListView=0x7f060043;
-        public static final int button_approve_rserved_post_rides=0x7f06005f;
+        public static final int button_approve_rserved_post_rides=0x7f06005d;
         public static final int button_cancel_rserved_post_rides=0x7f06005e;
-        public static final int callImageButton_schedules=0x7f060061;
-        public static final int callImageButton_user=0x7f06005c;
+        public static final int callImageButton_schedules=0x7f060060;
+        public static final int callImageButton_user=0x7f06005b;
         public static final int checkbox=0x7f06002d;
         public static final int collapseActionView=0x7f06000d;
         public static final int coment_post=0x7f06004c;
-        public static final int comment_schedules=0x7f060063;
+        public static final int comment_schedules=0x7f060062;
         public static final int datePicker=0x7f06003e;
         public static final int date_picker_my_post=0x7f060045;
         public static final int date_picker_post=0x7f06004e;
@@ -1119,9 +1120,9 @@ containing a value of this type.
         public static final int edit_query=0x7f060030;
         public static final int end=0x7f060013;
         public static final int et_name_basic_info=0x7f06003f;
-        public static final int et_name_setting=0x7f060053;
+        public static final int et_name_setting=0x7f060052;
         public static final int et_phoneNumber_one_basic_info=0x7f060040;
-        public static final int et_phoneNumber_setting=0x7f060054;
+        public static final int et_phoneNumber_setting=0x7f060053;
         public static final int et_phoneNumber_two_basic_info=0x7f060041;
         public static final int expand_activities_button=0x7f060026;
         public static final int expanded_menu=0x7f06002c;
@@ -1132,7 +1133,7 @@ containing a value of this type.
         public static final int ifRoom=0x7f06000a;
         public static final int image=0x7f060027;
         public static final int listMode=0x7f060001;
-        public static final int listView_reserved_post=0x7f060050;
+        public static final int listView_reserved_post=0x7f06004f;
         public static final int list_item=0x7f060029;
         public static final int middle=0x7f060012;
         public static final int my_posted_list=0x7f060046;
@@ -1140,9 +1141,9 @@ containing a value of this type.
         public static final int none=0x7f060010;
         public static final int normal=0x7f060000;
         public static final int number_of_person_post=0x7f06004b;
-        public static final int offerList=0x7f060052;
+        public static final int offerList=0x7f060051;
         public static final int phone_number_my_post=0x7f060044;
-        public static final int phone_number_schedules=0x7f060062;
+        public static final int phone_number_schedules=0x7f060061;
         public static final int progress_circular=0x7f060018;
         public static final int progress_horizontal=0x7f060019;
         public static final int radio=0x7f06002f;
@@ -1156,7 +1157,7 @@ containing a value of this type.
         public static final int search_plate=0x7f060036;
         public static final int search_src_text=0x7f060037;
         public static final int search_voice_btn=0x7f06003b;
-        public static final int service_provider_info_schedules=0x7f060060;
+        public static final int service_provider_info_schedules=0x7f06005f;
         public static final int service_provider_post=0x7f060047;
         public static final int shortcut=0x7f06002e;
         public static final int showCustom=0x7f060007;
@@ -1171,19 +1172,18 @@ containing a value of this type.
         public static final int title=0x7f06002b;
         public static final int to=0x7f06003d;
         public static final int top_action_bar=0x7f060020;
-        public static final int tvBookedDestination=0x7f060058;
-        public static final int tvBookedGroupID=0x7f060056;
+        public static final int tvBookedDestination=0x7f060057;
+        public static final int tvBookedGroupID=0x7f060055;
         public static final int tvBookedName=0x7f060042;
-        public static final int tvBookedPhoneNumber=0x7f06005a;
-        public static final int tvBookedPickUpTime=0x7f060059;
-        public static final int tvBookedServiceGroup=0x7f060055;
-        public static final int tvBookedStartingPoint=0x7f060057;
-        public static final int tv_name_rserved_post_rides=0x7f06005b;
-        public static final int tv_phonenuber_rserved_post_rides=0x7f06005d;
-        public static final int tv_ride_post_info=0x7f06004f;
+        public static final int tvBookedPhoneNumber=0x7f060059;
+        public static final int tvBookedPickUpTime=0x7f060058;
+        public static final int tvBookedServiceGroup=0x7f060054;
+        public static final int tvBookedStartingPoint=0x7f060056;
+        public static final int tv_name_rserved_post_rides=0x7f06005a;
+        public static final int tv_phonenuber_rserved_post_rides=0x7f06005c;
         public static final int up=0x7f060021;
         public static final int useLogo=0x7f060003;
-        public static final int userProfile=0x7f060051;
+        public static final int userProfile=0x7f060050;
         public static final int withText=0x7f06000c;
     }
     public static final class integer {
@@ -1350,21 +1350,25 @@ containing a value of this type.
         /** 
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+
     
 
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
+
         
 
         Base application theme for API 11+. This theme completely replaces
         AppBaseTheme from res/values/styles.xml on API 11+ devices.
+
     
  API 11 theme customizations can go here. 
 
         Base application theme for API 14+. This theme completely replaces
         AppBaseTheme from BOTH res/values/styles.xml and
         res/values-v11/styles.xml on API 14+ devices.
+
     
  API 14 theme customizations can go here. 
          */
