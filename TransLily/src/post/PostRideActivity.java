@@ -3,10 +3,12 @@ package post;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -15,6 +17,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -25,13 +28,18 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
 import android.text.format.DateFormat;
-import android.util.Log;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -39,9 +47,11 @@ import com.example.translili.R;
 
 import data.LilyUrls;
 
-public class PostRideActivity extends ActionBarActivity {
-	private EditText editTextServiceProvider;
+public class PostRideActivity extends ActionBarActivity implements
+		OnItemSelectedListener {
+
 	private EditText editTextTaxiID;
+	private TextView taxiIdTV;
 	private EditText editTextStartingPoint;
 	private EditText editTextDestinationPoint;
 	private EditText editTextNumberOfPerson;
@@ -49,12 +59,24 @@ public class PostRideActivity extends ActionBarActivity {
 	private Button buttonTime;
 	private Button buttonDate;
 	private String phone;
+	private String name;
+	String serviceProvider;
+
+	private Spinner serviceProviderSpinner;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_post_ride);
-		editTextServiceProvider = (EditText) findViewById(R.id.service_provider_post);
+
+		serviceProviderSpinner = (Spinner) findViewById(R.id.spinner);
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+				this, R.array.service_providers, R.layout.spiner_layout);
+		adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+
+		serviceProviderSpinner.setAdapter(adapter);
+		serviceProvider = serviceProviderSpinner.getSelectedItem().toString();
+		serviceProviderSpinner.setOnItemSelectedListener(this);
 		editTextTaxiID = (EditText) findViewById(R.id.taxi_id_post);
 		editTextStartingPoint = (EditText) findViewById(R.id.starting_point_post);
 		editTextDestinationPoint = (EditText) findViewById(R.id.destination_point_post);
@@ -62,11 +84,13 @@ public class PostRideActivity extends ActionBarActivity {
 		editTextComment = (EditText) findViewById(R.id.coment_post);
 		buttonTime = (Button) findViewById(R.id.time_picker_post);
 		buttonDate = (Button) findViewById(R.id.date_picker_post);
+		taxiIdTV = (TextView) findViewById(R.id.textview_post_ride);
 
 		SharedPreferences sharedPref = PostRideActivity.this
 				.getSharedPreferences(getString(R.string.com_lily_pre), 0);
 
 		phone = sharedPref.getString("phone", "").trim();
+		name = sharedPref.getString("name", "").trim();
 
 	}
 
@@ -90,11 +114,7 @@ public class PostRideActivity extends ActionBarActivity {
 	}
 
 	public boolean isFormFiledProperly() {
-		if (editTextServiceProvider.getText().toString().trim().equals("")) {
-			return false;
-		} else if (editTextTaxiID.getText().toString().trim().equals("")) {
-			return false;
-		}
+
 		if (editTextStartingPoint.getText().toString().trim().equals("")) {
 			return false;
 		}
@@ -138,14 +158,10 @@ public class PostRideActivity extends ActionBarActivity {
 
 		@Override
 		public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
-			// TODO Auto-generated method stub
-			Log.d("arg0", arg0.toString());
-
 			datePicker = (Button) getActivity().findViewById(
 					R.id.date_picker_post);
-			String date = Integer.toString(arg3) + "-" + Integer.toString(arg2)
-					+ "-" + Integer.toString(arg1);
-
+			String date = Integer.toString(arg3) + "-"
+					+ Integer.toString(arg2 + 1) + "-" + Integer.toString(arg1);
 			datePicker.setText(date);
 
 		}
@@ -196,21 +212,36 @@ public class PostRideActivity extends ActionBarActivity {
 		newFragment.show(getSupportFragmentManager(), "timePicker");
 	}
 
+	@SuppressLint("SimpleDateFormat")
 	public void postRide(View view) {
+
 		if (isFormFiledProperly()) {
-			String serviceProvider = editTextServiceProvider.getText()
-					.toString();
-			String taxiId = editTextTaxiID.getText().toString();
+
 			String startingPoint = editTextStartingPoint.getText().toString();
 			String destination = editTextDestinationPoint.getText().toString();
+			String groupId=editTextTaxiID.getText().toString();
 			String numberOfPerson = editTextNumberOfPerson.getText().toString();
 
 			String comment = editTextComment.getText().toString();
 			String pickUpTime = buttonTime.getText().toString();
+
 			String date = buttonDate.getText().toString();
 
-			new PostRidesAsynckTask().execute(serviceProvider, taxiId,
-					startingPoint, destination, phone, pickUpTime, date,
+			Date mysqlformatdate = null;
+			String mySqldate = null;
+			SimpleDateFormat dateForamt = new SimpleDateFormat("d-MM-yyyy");
+			try {
+				mysqlformatdate = dateForamt.parse(date);
+				String dateFormat = "yyyy-MM-dd";
+				mySqldate = DateFormat.format(dateFormat, mysqlformatdate)
+						.toString();
+
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+
+			new PostRidesAsynckTask().execute(serviceProvider, groupId,
+					startingPoint, destination, phone, pickUpTime, mySqldate,
 					numberOfPerson, comment);
 		} else {
 			Toast.makeText(this, "Please complete the forms",
@@ -231,17 +262,17 @@ public class PostRideActivity extends ActionBarActivity {
 
 		@Override
 		protected String doInBackground(String... params) {
-			// TODO Auto-generated method stub
+		
 			String content = null;
 			try {
 
 				System.out.println(params[0]);
 				// get the first argument passed to the execute method
 
-				List<NameValuePair> nameValuePaire = new ArrayList<NameValuePair>(
-						9);
+				List<NameValuePair> nameValuePaire = new ArrayList<NameValuePair>(10);
 
 				nameValuePaire.add(new BasicNameValuePair("name", params[0]));
+				
 				nameValuePaire.add(new BasicNameValuePair("id", params[1]));
 				nameValuePaire
 						.add(new BasicNameValuePair("starting", params[2]));
@@ -255,6 +286,7 @@ public class PostRideActivity extends ActionBarActivity {
 						.add(new BasicNameValuePair("capacity", params[7]));
 				nameValuePaire
 						.add(new BasicNameValuePair("comment", params[8]));
+				nameValuePaire.add(new BasicNameValuePair("ride_post_name", name));
 
 				DefaultHttpClient httpClient = new DefaultHttpClient();
 				HttpPost httpPost = new HttpPost(LilyUrls.POST_URL);
@@ -283,12 +315,36 @@ public class PostRideActivity extends ActionBarActivity {
 
 		@Override
 		protected void onPostExecute(String result) {
+			Toast.makeText(PostRideActivity.this, result, Toast.LENGTH_LONG)
+					.show();
 			progressDialog.setMessage(result);
 			progressDialog.dismiss();
-			System.out.println(result);
 
 		}
 
+	}
+
+	@Override
+	public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
+			long arg3) {
+
+		serviceProvider = arg0.getItemAtPosition(arg2).toString().trim();
+
+		if (serviceProvider.equalsIgnoreCase("Taxi")) {
+
+			editTextTaxiID.setVisibility(View.VISIBLE);
+			taxiIdTV.setVisibility(View.VISIBLE);
+		} else {
+			editTextTaxiID.setText("");
+			editTextTaxiID.setVisibility(View.GONE);
+			taxiIdTV.setVisibility(View.GONE);
+		}
+
+	}
+
+	@Override
+	public void onNothingSelected(AdapterView<?> arg0) {
+	
 	}
 
 }

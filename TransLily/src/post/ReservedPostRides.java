@@ -56,18 +56,27 @@ public class ReservedPostRides extends Activity {
 		listView = (ListView) findViewById(R.id.listView_reserved_post);
 		listView.setAdapter(new ReservedPostRidesArrayAdapter(
 				ReservedPostRides.this, bookedSchedules));
+		TextView serviceGrop =(TextView)findViewById(R.id.tv_service_provider_reserved_rides);
+		serviceGrop.setText(getIntent().getStringExtra("serviceGroup"));
 		
-//		String serviceGroup = getIntent().getStringExtra("serviceGroup");
-//		String name = getIntent().getStringExtra("name");
-//		String starting = getIntent().getStringExtra("starting");
-//		String destination = getIntent().getStringExtra("destination");
+		TextView taxiId =(TextView)findViewById(R.id.tv_taxiId_reserved_rides);
+		taxiId.setText(getIntent().getStringExtra("taxiId"));
 		
-//		TextView tv = (TextView) findViewById(R.id.tv_ride_post_info);
-//
-//		tv.setText(Html.fromHtml("<b> Service Group: </b>" + serviceGroup
-//				+ "<b> <br> Name: </b>" + name + "<b> <br> Starting : </b>"
-//				+ starting + "<b> <br> Destination: </b>" + destination));
-
+		TextView name =(TextView)findViewById(R.id.tv_name_reserved_rides);
+		name.setText(getIntent().getStringExtra("name"));
+		
+		TextView start =(TextView)findViewById(R.id.tv_starting_reserved_rides);
+		start.setText(getIntent().getStringExtra("starting"));
+		
+		TextView destination =(TextView)findViewById(R.id.tv_destination_reserved_rides);
+		destination.setText(getIntent().getStringExtra("destination"));
+		
+		TextView dateTv =(TextView)findViewById(R.id.tv_date_reserved_rides);
+		dateTv.setText(getIntent().getStringExtra("date"));
+		
+		TextView pickingTimeTv =(TextView)findViewById(R.id.tv_pickingTime_reserved_rides);
+		pickingTimeTv.setText(getIntent().getStringExtra("pickingTime"));
+		
 		 transportId = getIntent().getIntExtra("id", 0);
 
 		if (transportId != 0) {

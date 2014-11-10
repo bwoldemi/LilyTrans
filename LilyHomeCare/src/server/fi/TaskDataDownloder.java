@@ -1,5 +1,7 @@
 package server.fi;
 
+import model.Tasks;
+
 public interface TaskDataDownloder {
 	/**
 	 * Retrieve data from REST server 
@@ -9,6 +11,6 @@ public interface TaskDataDownloder {
 	/**
 	 * upload to server 
 	 */
-	public void uploadData();
+	public void uploadData(Tasks task, String customerName);
 	
 }

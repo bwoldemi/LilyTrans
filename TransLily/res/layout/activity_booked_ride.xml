@@ -10,16 +10,33 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="request.BookedRideActivity" >
 
-    <TextView
-        android:id="@+id/tvBookedName"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textColor="#FFF"
-        android:textSize="30sp" />
+        android:orientation="horizontal" 
+        android:padding="5sp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/filer_by_date"
+            android:textColor="#FFF"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/booked_ride_date_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="pickDateDialog"
+            android:text="@string/pick_date"
+            android:layout_marginLeft="10sp"
+            android:textColor="#FFF"
+            android:textSize="20sp" />
+    </LinearLayout>
 
     <ListView
         android:id="@+id/bookedRidesListView"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:dividerHeight="4dp" />
 

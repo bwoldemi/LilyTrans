@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp" >
+
+    <TextView
+        android:id="@+id/starting_destination_point_tv_ask"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/My_Post_rides" 
+        android:textSize="20sp"/>
+
+    <TextView
+        android:id="@+id/destination_point_tv_ask"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/starting_destination_point_tv_ask"
+        android:layout_toLeftOf="@+id/times"
+        android:text="@string/My_Post_rides" 
+        android:textSize="12sp"/>
+
+    <TextView
+        android:id="@id/times"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/destination_point_tv_ask"
+        android:text="@string/My_Post_rides"  android:textSize="12sp"/>
+
+</RelativeLayout>

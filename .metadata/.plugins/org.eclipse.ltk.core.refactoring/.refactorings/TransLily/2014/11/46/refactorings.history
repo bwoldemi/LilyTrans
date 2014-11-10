@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;TransLily/res/layout/schedules.xml&apos; to &apos;dialog_my_post_rides.xml&apos;" description="Rename resource &apos;schedules.xml&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="res/layout/schedules.xml" name="dialog_my_post_rides.xml" stamp="1415645186313" updateReferences="true"/>
+</session>

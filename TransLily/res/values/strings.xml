@@ -17,23 +17,23 @@
     <string name="button_offerride"> Offer ride</string>
     <string name="pick_time"> Pick time </string>
     <string name="pick_date"> Pick date </string>
-    <string name="title_activity_ask_ride">AskRideActivity</string>
+    <string name="title_activity_ask_ride">Ask Ride Page</string>
     <string name="title_activity_booked_ride">BookedRideActivity</string>
     <string name="show_my_booked_rides">Show my booked rides</string>
-    <string name="title_activity_post_ride">PostRideActivity</string>
+    <string name="title_activity_post_ride">Post Ride Page</string>
     <string name="search_ride">Search ride </string>
     <string name="post_ride">Post ride </string>
-    <string name="My_request_rides">My request rides </string>
-    <string name="My_Post_rides">My post rides</string>
+    <string name="My_request_rides">My requests </string>
+    <string name="My_Post_rides">My posts </string>
     <string name="welcome_message">Welcome To Lily Transport </string>
     <string name="service_provider">Service provider </string>
-    <string name="taxi_id">Taxi id/ Name</string>
+    <string name="taxi_id">Taxi id</string>
     <string name="starting_point">Starting point</string>
     <string name="destination"> Destination </string>
     <string name="date"> Date </string>
     <string name="number_of_person">Number of Person</string>
     <string name="comment">Comment </string>
-    <string name="title_activity_my_post_rides">MyPostRides</string>
+    <string name="title_activity_my_post_rides">My Post Rides Page</string>
     <string name="title_activity_reserved_post_rides">ReservedPostRides</string>
     <string name="cancel">Cancel</string>
     <string name="approve">Approve</string>
@@ -43,11 +43,21 @@
     <string name="com.lily.pre">com.lily.pre</string>
     <string name="save_changes">Save Changes</string>
     <string name="change_your_data">Change your data</string>
-
+    <string name="sort_rides">Filter</string>
+    <string name="filer_by_date">Filter by date </string>
+    <string name="delete">Delete</string>
+	<string name="cancele">Cancele</string>
     <color name="text_color">#FFF</color>
     <color name="background">#669900</color>
-
+    <color name="backgroundFrom">#000099</color>
+    <color name="dark_gray">#27AB32</color>
+	<color name="background_filter_layout">#000</color>
     <string name="title_activity_basic_info">BasicInfoActivity</string>
     <string name="title_activity_setting">Setting</string>
+  
+    <string-array name="service_providers">
+        <item>Taxi</item>
+        <item>Voulunter</item>
+    </string-array>
 
 </resources>

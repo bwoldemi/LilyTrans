@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/background_filter_layout"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/tv_my_post_rides"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/dark_gray"
+        android:gravity="center"
+      android:padding="0dip"
+        android:textColor="@color/text_color"
+        android:textSize="20sp" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="dialogButtonDelete"
+        android:text="@string/delete"
+        android:textColor="@color/text_color"
+        android:textSize="15sp" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="dialogButtonCancel"
+        android:text="@string/cancel"
+        android:textColor="@color/text_color"
+        android:textSize="15sp" />
+
+</LinearLayout>

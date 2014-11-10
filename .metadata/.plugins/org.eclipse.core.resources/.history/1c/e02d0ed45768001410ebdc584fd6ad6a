@@ -1,0 +1,271 @@
+package request;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.text.Html;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.example.translili.R;
+
+import data.LilyUrls;
+import data.Parser;
+import data.ScheduleList;
+
+/**
+ * Searching and booking
+ * 
+ * @author Thinkpad
+ * 
+ */
+public class SearchRideActivity extends ActionBarActivity {
+	private Vector<ScheduleList> schedules = null;
+	private TextView userProfile;
+
+	private String name = null;
+	private String phonenumber = null;
+	private String from = null;
+	private String to = null;
+	private String date = null;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_search_ride);
+		userProfile = (TextView) findViewById(R.id.userProfile);
+
+		SharedPreferences sharedPref = SearchRideActivity.this
+				.getSharedPreferences(getString(R.string.com_lily_pre), 0);
+
+		name = sharedPref.getString("name", "").trim();
+		phonenumber = sharedPref.getString("phone", "").trim();
+
+		from = getIntent().getStringExtra("starting");
+		to = getIntent().getStringExtra("destination");
+		date = getIntent().getStringExtra("date");
+
+		userProfile.setText(Html.fromHtml("Name: " + name + "<br/>" + "From: "
+				+ from + "<br/>" + "To: " + to + "<br/>" + "Phonenumber: "
+				+ phonenumber + "<br/>" + "Date: " + date));
+
+
+	
+		
+
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.ask_ride, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+		if (id == R.id.action_settings) {
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	public void callNumber(View view) {
+		ImageButton im = (ImageButton) view;
+
+		try {
+			String str = (String) im.getTag();
+
+			Intent callIntent = new Intent(Intent.ACTION_CALL);
+			callIntent.setData(Uri.parse("tel:" + str));
+			startActivity(callIntent);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+
+	
+	/**
+	 * book the transport
+	 * 
+	 * @param view
+	 */
+	public void bookTransport(View view) {
+		Button button = (Button) view;
+		int id = (Integer) button.getTag();
+		if (button.getText().toString().equalsIgnoreCase("Request")) {
+			button.setText("Wating: Cancel Request");
+			button.setTextColor(Color.DKGRAY);
+
+			new BookRideAsynckTask().execute(id);
+		} else {
+			button.setText("Request");
+			button.setTextColor(getResources().getColor(R.color.text_color));
+
+			new CancelRideAsynckTask().execute(id);
+		}
+
+	}
+
+	public void showMyBookedRides(View view) {
+		Intent intent = new Intent(this, BookedRideActivity.class);
+		intent.putExtra("name", name);
+		intent.putExtra("phonenumber", phonenumber);
+		intent.putExtra("date", date);
+		startActivity(intent);
+	}
+
+	/**
+	 * booking time
+	 * 
+	 * @author Thinkpad
+	 * 
+	 */
+
+	private class BookRideAsynckTask extends AsyncTask<Integer, Void, String> {
+		ProgressDialog progressDialog;
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			progressDialog = ProgressDialog.show(SearchRideActivity.this,
+					"Requesting", "Sending request....");
+		}
+
+		@Override
+		protected String doInBackground(Integer... params) {
+			// TODO Auto-generated method stub
+			String content = null;
+			try {
+				DefaultHttpClient httpClient = new DefaultHttpClient();
+
+				HttpPost httpPost = new HttpPost(LilyUrls.BOOKING_URL);
+				List<NameValuePair> nameValuePaire = new ArrayList<NameValuePair>(
+						3);
+				nameValuePaire.add(new BasicNameValuePair("name", name));
+				nameValuePaire.add(new BasicNameValuePair("phonenumber",
+						phonenumber));
+				nameValuePaire.add(new BasicNameValuePair("status", "Waiting"));
+				nameValuePaire.add(new BasicNameValuePair("id", Integer
+						.toString(params[0])));
+
+				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePaire));
+
+				HttpResponse httpResponse = httpClient.execute(httpPost);
+				HttpEntity httpEntity = httpResponse.getEntity();
+				InputStream inputStream = httpEntity.getContent();
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(inputStream, "iso-8859-1"), 8);
+				StringBuffer stringBuffer = new StringBuffer();
+				String line = null;
+				while ((line = reader.readLine()) != null) {
+					stringBuffer.append(line);
+				}
+				inputStream.close(); // free memory
+
+				content = stringBuffer.toString();
+				return content;
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				return null;
+			}
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			System.out.println(result);
+			progressDialog.dismiss();
+		}
+
+	}
+
+	// for cancling the app
+	private class CancelRideAsynckTask extends AsyncTask<Integer, Void, String> {
+		ProgressDialog progressDialog;
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			progressDialog = ProgressDialog.show(SearchRideActivity.this,
+					"Cancling", "Cancling request....");
+		}
+
+		@Override
+		protected String doInBackground(Integer... params) {
+			// TODO Auto-generated method stub
+			String content = null;
+			try {
+				DefaultHttpClient httpClient = new DefaultHttpClient();
+
+				HttpPost httpPost = new HttpPost(
+						LilyUrls.USER_CANCEL_REQUEST_URL);
+				List<NameValuePair> nameValuePaire = new ArrayList<NameValuePair>(
+						2);
+
+				nameValuePaire.add(new BasicNameValuePair("id", Integer
+						.toString(params[0])));
+				nameValuePaire
+						.add(new BasicNameValuePair("phone", phonenumber));
+
+				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePaire));
+
+				HttpResponse httpResponse = httpClient.execute(httpPost);
+				HttpEntity httpEntity = httpResponse.getEntity();
+				InputStream inputStream = httpEntity.getContent();
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(inputStream, "iso-8859-1"), 8);
+				StringBuffer stringBuffer = new StringBuffer();
+				String line = null;
+				while ((line = reader.readLine()) != null) {
+					stringBuffer.append(line);
+				}
+				inputStream.close(); // free memory
+
+				content = stringBuffer.toString();
+				return content;
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				return null;
+			}
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+
+			progressDialog.dismiss();
+		}
+
+	}
+}

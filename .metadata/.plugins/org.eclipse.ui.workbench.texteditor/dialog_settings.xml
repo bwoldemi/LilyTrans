@@ -2,22 +2,25 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="" key="selection"/>
+		<item value="Lily" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="call"/>
-			<item value="tutbereket"/>
-			<item value="call_schedules"/>
-			<item value="font"/>
-			<item value="&lt;b&gt;"/>
-			<item value="12sp"/>
-			<item value="isFormFiledProperly"/>
-			<item value="post_ride"/>
+			<item value="lily"/>
+			<item value="#FFF"/>
+			<item value="abc_ab_stacked_solid_dark_holo"/>
+			<item value="Lily"/>
+			<item value="Starting: any"/>
+			<item value="starting:"/>
+			<item value="starting"/>
+			<item value="starting :any"/>
 		</list>
 		<list key="replacehistory">
+			<item value="#000"/>
+			<item value="abc_ab_solid_light_holo"/>
+			<item value="15sp"/>
 			<item value="20sp"/>
 		</list>
 	</section>

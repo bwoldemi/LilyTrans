@@ -3,13 +3,12 @@ package lily.homecare;
 import java.util.Date;
 import java.util.Vector;
 import menuActivities.Help;
-import menuActivities.History;
+
 import menuActivities.Read;
 import menuActivities.Writer;
 import model.Customer;
 import model.Tasks;
 import server.fi.Server;
-import storeage.SQliteHelper;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
@@ -29,9 +28,10 @@ import android.os.Parcelable;
 import android.text.Html;
 import android.text.format.DateFormat;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,7 +43,7 @@ public class MainActivity extends Activity implements TaskObsorver {
 	private TextView textviewTaskName;
 	private TextView textViewTaskDetail;
 	private TextView textViewTaskReview;
-
+	private ImageView imageView;
 	private boolean taskListed = false;
 	private boolean taskStarted = false;
 
@@ -59,9 +59,6 @@ public class MainActivity extends Activity implements TaskObsorver {
 	// for downloading data from web server
 	private Server server;
 
-	// database
-	private SQliteHelper db;
-
 	// NFC TAG data
 	private String tagId = null;
 	ProgressDialog progressDialog;
@@ -71,6 +68,7 @@ public class MainActivity extends Activity implements TaskObsorver {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		imageView = (ImageView)findViewById(R.id.imageView);
 
 		// customerTask = new TaskForOneCustomer();
 		textViewCustmerName = (TextView) findViewById(R.id.textViewCustomerName);
@@ -96,10 +94,14 @@ public class MainActivity extends Activity implements TaskObsorver {
 			Toast.makeText(this, "Please Enable NFC Mode", Toast.LENGTH_LONG)
 					.show();
 		}
+		if(!checkNetwork()){
+			Toast.makeText(this, "Please Enable Internet ", Toast.LENGTH_LONG)
+			.show();
+		}
 		// Initializing
 		server = new Server((Context)this);
 		server.setmObsorver((TaskObsorver) this);
-		db = new SQliteHelper(this);
+	
 
 	}
 
@@ -139,6 +141,12 @@ public class MainActivity extends Activity implements TaskObsorver {
 	@Override
 	protected void onNewIntent(Intent intent) {
 		if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
+			
+			if(!checkNetwork()){
+				Toast.makeText(this, "Please Enable Internet ", Toast.LENGTH_LONG)
+				.show();
+				return;
+			}
 			String tagUssage = null;
 			NdefMessage[] messages = getNdefMessage(intent);
 			// for TNF Media type
@@ -155,7 +163,7 @@ public class MainActivity extends Activity implements TaskObsorver {
 
 				tagUssage = type.toString();
 				tagId = data.toString();
-
+				
 				if (tagUssage.equals("application/door") && taskListed == false
 						&& taskStarted == false) {
 					tagId.toString();
@@ -164,8 +172,7 @@ public class MainActivity extends Activity implements TaskObsorver {
 				} else if (tagUssage.equals("application/door")
 						&& taskListed == true) {
 					// if user scan door nfc tag twice
-					Toast.makeText(this,
-							"Please tap Task-Tags, to see list of Tasks",
+					Toast.makeText(this,"Please tap Task-Tags, to see list of Tasks",
 							Toast.LENGTH_LONG).show();
 				} else if (tagUssage.equals("application/task")
 						&& taskStarted == false && taskListed == true) {
@@ -187,8 +194,7 @@ public class MainActivity extends Activity implements TaskObsorver {
 					// check if it is same tag, if same taskid display dialog
 					// else ask to diplay
 					if (currentTaskTagId.equals(tagId)) {
-						AlertDialog.Builder dialog = new AlertDialog.Builder(
-								this);
+						AlertDialog.Builder dialog = new AlertDialog.Builder(this);
 						dialog.setTitle("Task status");
 						dialog.setMessage("Click YES to complete the task!")
 								.setCancelable(false)
@@ -207,6 +213,7 @@ public class MainActivity extends Activity implements TaskObsorver {
 													}
 												}
 												task.setTaskEndingTime(new Date());
+												server.uploadData(task, customerTask.getFirstName()+" " +customerTask.getLastName());
 												listTask();
 
 											}
@@ -303,7 +310,7 @@ public class MainActivity extends Activity implements TaskObsorver {
 	public void listTask() {
 		// clearing text fields
 		reset();
-
+		imageView.setVisibility(View.GONE);
 		this.taskStarted = false;
 		this.taskListed = true;
 
@@ -496,11 +503,7 @@ public class MainActivity extends Activity implements TaskObsorver {
 			Intent intent = new Intent(this, Writer.class);
 			startActivity(intent);
 			return true;
-		} else if (id == R.id.archive) {
-			Intent intent = new Intent(this, History.class);
-			startActivity(intent);
-			return true;
-		}
+		} 
 		return super.onOptionsItemSelected(item);
 	}
 

@@ -25,7 +25,18 @@ public class Parser {
 			schedule.setDestinationPoint(object.getString("Destination"));
 			schedule.setPickUpTime(object.getString("PickUpTime"));
 			schedule.setDate(object.getString("Date"));
-			schedule.setNumbureOfPersons(Integer.parseInt(object.getString("Capacity")));
+			schedule.setName(object.getString("Name"));
+			try{
+				if(object.getString("Capacity").trim().equalsIgnoreCase("")){
+					schedule.setNumbureOfPersons(0);
+				}else{
+					schedule.setNumbureOfPersons(Integer.parseInt(object.getString("Capacity")));
+				}
+			
+			}catch (Exception ex){
+				ex.printStackTrace();
+			}
+			
 			schedule.setPhonenumber(object.getString("PhoneNumber"));
 			schedule.setComment(object.getString("Comment"));
 			schedule.setStatus(object.optString("status"));

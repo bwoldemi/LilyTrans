@@ -1,12 +1,8 @@
 package storeage;
 
 
-import model.Customer;
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class SQliteHelper extends SQLiteOpenHelper {
@@ -14,7 +10,6 @@ public class SQliteHelper extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "LILIDB";
 	private static final String TABLE_NAME = "LILI_TABLE";
 	private static final int DATABASE_VERSION = 1;
-	private static final String KEY_ID = "id";
 	private static final String CAREGIVER = "caregiver";
 	private static final String CLIENT_NAME = "client";
 	private static final String START_TIME = "startTime";

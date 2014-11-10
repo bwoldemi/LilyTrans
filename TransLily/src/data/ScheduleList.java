@@ -8,6 +8,7 @@ public class ScheduleList implements Parcelable {
 	private int transportID;
 	private String serviceGroup;
 	private String taxiID;
+	private String name;
 	private String startingPoint;
 	private String destinationPoint;
 	private String pickUpTime;
@@ -122,6 +123,12 @@ public class ScheduleList implements Parcelable {
 		this.status = status;
 	}
 
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
 	@Override
 	public int describeContents() {
 		// TODO Auto-generated method stub

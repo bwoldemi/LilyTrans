@@ -17,13 +17,27 @@
         android:textColor="#FFF"
         android:textSize="20sp" />
 
-    <ListView
-        android:id="@+id/offerList"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-    </ListView>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:orientation="horizontal">
 
-    <!--
+        <ImageButton
+            android:id="@+id/ib_search_ride"
+            android:layout_width="25dip"
+            android:layout_height="25dip"
+            android:onClick="callNumber"
+            android:contentDescription="@string/phone_number"
+            android:src="@drawable/dial_phone_telephone_call_widgets_waiting" />
+
+        <TextView
+            android:id="@+id/tv_phonenumber_search_ride"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFF"
+            android:textSize="20sp" />
+    </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dip"
@@ -32,15 +46,14 @@
         android:orientation="vertical" >
 
         <Button
-            android:onClick="showMyBookedRides"
+            android:id="@+id/button_request_cancel"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center|bottom"
-            android:text="@string/show_my_booked_rides"
+            android:onClick="bookTransport"
             android:textColor="#FFF"
-            android:textSize="20sp" />
-        
+            android:textSize="20sp"
+            android:textStyle="bold" />
     </LinearLayout>
-    -->
 
 </LinearLayout>

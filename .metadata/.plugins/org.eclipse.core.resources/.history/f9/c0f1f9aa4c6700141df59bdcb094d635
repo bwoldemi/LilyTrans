@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp" >
+
+    <LinearLayout
+        android:id="@+id/thumbnail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="5dip"
+        android:padding="3dip" >
+
+        <ImageView
+            android:id="@+id/list_image"
+            android:layout_width="50dip"
+            android:layout_height="50dip"
+            android:contentDescription="@string/lily"
+            android:src="@drawable/ic_launcher" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/starting_destination_point_tv_ask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/thumbnail"
+        android:layout_toRightOf="@+id/thumbnail"
+        android:text="@string/My_Post_rides"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:typeface="sans" />
+
+    <TextView
+        android:id="@+id/service_group_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/starting_destination_point_tv_ask"
+        android:layout_toRightOf="@+id/thumbnail"
+        android:text="@string/My_Post_rides"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/picking_time_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/starting_destination_point_tv_ask"
+        android:text="@string/pick_time"
+        android:textSize="12sp" />
+
+    <ImageView
+     
+       android:layout_width="25dip"
+            android:layout_height="25dip"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/picking_time_tv"
+        android:src="@drawable/ic_launcher" 
+        android:contentDescription="@string/lily"/>
+
+    <TextView
+        android:id="@+id/ask_ride_request_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/service_group_tv"
+        android:layout_toLeftOf="@+id/picking_time_tv"
+       />
+
+</RelativeLayout>

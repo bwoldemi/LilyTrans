@@ -14,34 +14,17 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <TextView
+        <Spinner
+            android:id="@+id/spinner"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10sp"
-            android:gravity="center"
-            android:text="@string/lily"
+            android:prompt="@string/service_provider"
             android:textColor="#FFF"
-            android:textSize="30sp" />
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
             android:layout_marginBottom="5sp"
-            android:text="@string/service_provider"
-            android:textColor="#FFF"
-            android:textSize="20sp" />
-
-        <EditText
-            android:id="@+id/service_provider_post"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10sp"
-            android:background="@drawable/abc_ab_stacked_solid_dark_holo"
-            android:hint="@string/typein_name"
-            android:padding="10sp"
-            android:textColor="#FFF" />
+           />
 
         <TextView
+            android:id="@+id/textview_post_ride"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5sp"
@@ -54,10 +37,10 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10sp"
-            android:background="@drawable/abc_ab_stacked_solid_dark_holo"
-            android:hint="@string/starting_location"
+            android:background="@drawable/abc_ab_solid_light_holo"
+            android:hint="@string/taxi_id"
             android:padding="10sp"
-            android:textColor="#FFF" />
+            android:textColor="#000" />
 
         <TextView
             android:layout_width="fill_parent"
@@ -72,10 +55,10 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10sp"
-            android:background="@drawable/abc_ab_stacked_solid_dark_holo"
-            android:hint="@string/ending_location"
+            android:background="@drawable/abc_ab_solid_light_holo"
+            android:hint="@string/starting_point"
             android:padding="10sp"
-            android:textColor="#FFF" />
+            android:textColor="#000" />
 
         <TextView
             android:layout_width="fill_parent"
@@ -90,10 +73,10 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10sp"
-            android:background="@drawable/abc_ab_stacked_solid_dark_holo"
+            android:background="@drawable/abc_ab_solid_light_holo"
             android:hint="@string/ending_location"
             android:padding="10sp"
-            android:textColor="#FFF" />
+            android:textColor="#000" />
 
         <TextView
             android:layout_width="fill_parent"
@@ -108,11 +91,11 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10sp"
-            android:background="@drawable/abc_ab_stacked_solid_dark_holo"
-            android:hint="@string/ending_location"
+            android:background="@drawable/abc_ab_solid_light_holo"
+            android:hint="@string/number_of_person"
             android:inputType="number"
             android:padding="10sp"
-            android:textColor="#FFF" />
+            android:textColor="#000" />
 
         <TextView
             android:layout_width="fill_parent"
@@ -127,10 +110,10 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10sp"
-            android:background="@drawable/abc_ab_stacked_solid_dark_holo"
+            android:background="@drawable/abc_ab_solid_light_holo"
             android:inputType="textShortMessage"
             android:padding="10sp"
-            android:textColor="#FFF" />
+            android:textColor="#000" />
 
         <Button
             android:id="@+id/time_picker_post"

@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
@@ -17,38 +19,46 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 
 import com.example.translili.R;
-import com.example.translili.R.id;
-import com.example.translili.R.layout;
-import com.example.translili.R.menu;
 
-import android.app.Activity;
+
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Html;
+
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.ActionBarActivity;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TextView;
 import data.Parser;
 import data.ScheduleList;
-/**
- * for searching booked rides 
- * @author Thinkpad
- *
- */
-public class BookedRideActivity extends Activity {
-	private String name;
-	private String phonenumber;
-	private String date;
-	private ListView listView;
-	private TextView tvBookedNameDate;
 
+/**
+ * for searching booked rides
+ * 
+ * @author Thinkpad
+ * 
+ */
+public class BookedRideActivity extends ActionBarActivity {
+
+	private String phonenumber;
+	private String date = null;
+	private ListView listView;
+	private Button pickDateButton;
+	private final static int ONE=1;
 	public final static String BOOKED_URL = "http://tutbereket.net//LiliTransport/search_user_books.php";
 
 	@Override
@@ -57,15 +67,17 @@ public class BookedRideActivity extends Activity {
 		setContentView(R.layout.activity_booked_ride);
 
 		listView = (ListView) findViewById(R.id.bookedRidesListView);
-		tvBookedNameDate = (TextView) findViewById(R.id.tvBookedName);
 
-		name = getIntent().getStringExtra("name");
+		pickDateButton = (Button) findViewById(R.id.booked_ride_date_button);
+		if (pickDateButton.getText().toString().equalsIgnoreCase("Pick date")) {
+			String dateFormat = "yyyy-MM-dd";
+			date = DateFormat.format(dateFormat, new Date()).toString();
+		}
 
-		phonenumber = getIntent().getStringExtra("phonenumber");
-		date = getIntent().getStringExtra("date");
+		SharedPreferences sharedPref = BookedRideActivity.this
+				.getSharedPreferences(getString(R.string.com_lily_pre), 0);
+		phonenumber = sharedPref.getString("phone", "").trim();
 
-		tvBookedNameDate.setText(Html.fromHtml("Name: " + name + "<br/>"
-				+ "Date: " + date));
 		new SearchBooksAsynckTask().execute(phonenumber, date);
 	}
 
@@ -73,6 +85,11 @@ public class BookedRideActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.booked_ride, menu);
 		return true;
+	}
+
+	public void pickDateDialog(View view) {
+		DialogFragment newFragment = new DatePickerFragment();
+		newFragment.show(getSupportFragmentManager(), "Date Picker");
 	}
 
 	@Override
@@ -84,15 +101,13 @@ public class BookedRideActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	
-
-	private class BookArrayAdapter extends ArrayAdapter<ScheduleList> {
-		Vector<ScheduleList> bookedRides;
+	private class BookedArrayAdapter extends ArrayAdapter<ScheduleList> {
+		Vector<ScheduleList> scheduleList;
 		Context context;
 
-		public BookArrayAdapter(Context context, Vector<ScheduleList> resource) {
-			super(context, R.layout.booked_rides, resource);
-			this.bookedRides = resource;
+		public BookedArrayAdapter(Context context, Vector<ScheduleList> resource) {
+			super(context, R.layout.dialog_my_post_rides, resource);
+			this.scheduleList = resource;
 			this.context = context;
 		}
 
@@ -100,37 +115,48 @@ public class BookedRideActivity extends Activity {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			LayoutInflater inflator = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
 			if (convertView == null) {
-				convertView = inflator.inflate(R.layout.booked_rides, parent,
-						false);
+				convertView = inflator.inflate(R.layout.ask_ride_list_view,
+						parent, false);
 			}
 
-			TextView tvServiceGroup = (TextView) convertView
-					.findViewById(R.id.tvBookedServiceGroup);
-			TextView tvGroupId = (TextView) convertView
-					.findViewById(R.id.tvBookedGroupID);
-			TextView tvStartinpoint = (TextView) convertView
-					.findViewById(R.id.tvBookedStartingPoint);
-			TextView tvDestination = (TextView) convertView
-					.findViewById(R.id.tvBookedDestination);
-			TextView tvPickupTime = (TextView) convertView
-					.findViewById(R.id.tvBookedPickUpTime);
-			TextView tvPhoneNumber = (TextView) convertView
-					.findViewById(R.id.tvBookedPhoneNumber);
+			TextView tvStartingDestination = (TextView) convertView
+					.findViewById(R.id.starting_destination_point_tv_ask);
+			TextView pickingTime = (TextView) convertView
+					.findViewById(R.id.picking_time_tv);
+			TextView serviceGroup = (TextView) convertView
+					.findViewById(R.id.service_group_tv);
+			tvStartingDestination.setText(scheduleList.get(position)
+					.getStartingPoint()
+					+ " To "
+					+ scheduleList.get(position).getDestinationPoint());
 
-			tvServiceGroup.setText(Html.fromHtml("<b>" + "Type: </b>"
-					+ bookedRides.get(position).getServiceGroup()));
-			tvGroupId.setText(Html.fromHtml("<b>" + "Id: </b>"
-					+ bookedRides.get(position).getTaxiID()));
-			tvStartinpoint.setText(Html.fromHtml("<b>" + "Starting Point: </b>"
-					+ bookedRides.get(position).getStartingPoint()));
-			tvDestination.setText(Html.fromHtml("<b>" + "Destination: </b>"
-					+ bookedRides.get(position).getDestinationPoint()));
-			tvPickupTime.setText(Html.fromHtml("<b>" + "Pick up Time : </b>"
-					+ bookedRides.get(position).getPickUpTime()));
-			tvPhoneNumber.setText(Html.fromHtml("<b>" + "Phone number : </b>"
-					+ bookedRides.get(position).getPhonenumber()));
+			pickingTime.setText(scheduleList.get(position).getPickUpTime());
+
+			serviceGroup.setText(scheduleList.get(position).getServiceGroup());
+			TextView requestTv = (TextView) convertView
+					.findViewById(R.id.ask_ride_request_tv);
+
+			if (scheduleList.get(position).getStatus()
+					.equalsIgnoreCase("Approved")) {
+				requestTv.setText("Approved");
+				requestTv.setTextColor(Color.GREEN);
+
+			} else if (scheduleList.get(position).getStatus()
+					.equalsIgnoreCase("Canceled")) {
+
+				requestTv.setText("Request Canceled: ");
+				requestTv.setTextColor(Color.RED);
+
+			} else if (scheduleList.get(position).getStatus()
+					.equalsIgnoreCase("Waiting")) {
+				requestTv.setText("Waiting");
+				requestTv.setTextColor(Color.DKGRAY);
+
+			} else {
+				requestTv.setText("Request");
+
+			}
 
 			return convertView;
 		}
@@ -156,10 +182,11 @@ public class BookedRideActivity extends Activity {
 				// get the first argument passed to the execute method
 				HttpPost httpPost = new HttpPost(BOOKED_URL);
 				List<NameValuePair> nameValuePaire = new ArrayList<NameValuePair>(
-						3);
-
-				nameValuePaire.add(new BasicNameValuePair("phonenumber",params[0]));
+						2);
+				nameValuePaire.add(new BasicNameValuePair("phonenumber",
+						params[0]));
 				nameValuePaire.add(new BasicNameValuePair("date", params[1]));
+
 				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePaire));
 
 				HttpResponse httpResponse = httpClient.execute(httpPost);
@@ -187,7 +214,8 @@ public class BookedRideActivity extends Activity {
 		protected void onPostExecute(String result) {
 			System.out.println(result);
 			try {
-				listView.setAdapter(new BookArrayAdapter(BookedRideActivity.this, Parser.parse(result)));
+				listView.setAdapter(new BookedArrayAdapter(
+						BookedRideActivity.this, Parser.parse(result)));
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -197,4 +225,33 @@ public class BookedRideActivity extends Activity {
 
 	}
 
+	public static class DatePickerFragment extends DialogFragment implements
+			DatePickerDialog.OnDateSetListener {
+		Button datePicker;
+
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			// Use the current date as the default date in the picker
+			final Calendar c = Calendar.getInstance();
+			int currentYear = c.get(Calendar.YEAR);
+			int currentMonth = c.get(Calendar.MONTH) ;
+			int currentDay = c.get(Calendar.DAY_OF_MONTH);
+
+			// Create a new instance of DatePickerDialog and return it
+			return new DatePickerDialog(getActivity(), this, currentYear,
+					currentMonth, currentDay);
+		}
+
+		@Override
+		public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
+			// TODO Auto-generated method stub
+
+			datePicker = (Button) getActivity().findViewById(R.id.booked_ride_date_button);
+			String date = Integer.toString(arg3) + "-" + Integer.toString(arg2+ONE)+ "-" + Integer.toString(arg1);
+		
+			datePicker.setText(date);
+			//TODO 
+		//	SearchBooksAsynckTask();
+		}
+	}
 }

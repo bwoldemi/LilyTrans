@@ -3,6 +3,7 @@ package com.example.translili;
 import post.MyPostedRides;
 import post.PostRideActivity;
 import request.AskRideActivity;
+import request.BookedRideActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -40,11 +41,9 @@ public class MainActivity extends Activity {
 	}
 
 	public void myRequestRides(View view) {
-		// Intent intent = new Intent(this, BookedRideActivity.class);
-		// startActivity(intent);
-		// TODO
-		Toast.makeText(this, "To Do", Toast.LENGTH_LONG).show();
-
+		Intent intent = new Intent(this, BookedRideActivity.class);
+		startActivity(intent);
+		Toast.makeText(this, "TODO", Toast.LENGTH_SHORT).show();
 	}
 
 	public void myPostRides(View view) {
