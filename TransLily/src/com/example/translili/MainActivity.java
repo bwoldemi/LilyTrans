@@ -43,7 +43,7 @@ public class MainActivity extends Activity {
 	public void myRequestRides(View view) {
 		Intent intent = new Intent(this, BookedRideActivity.class);
 		startActivity(intent);
-		Toast.makeText(this, "TODO", Toast.LENGTH_SHORT).show();
+
 	}
 
 	public void myPostRides(View view) {

@@ -3,6 +3,8 @@ package request;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -20,11 +22,12 @@ import org.json.JSONException;
 
 import com.example.translili.R;
 
-
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -38,11 +41,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
+import data.LilyUrls;
 import data.Parser;
 import data.ScheduleList;
 
@@ -55,11 +61,10 @@ import data.ScheduleList;
 public class BookedRideActivity extends ActionBarActivity {
 
 	private String phonenumber;
-	private String date = null;
+
 	private ListView listView;
 	private Button pickDateButton;
-	private final static int ONE=1;
-	public final static String BOOKED_URL = "http://tutbereket.net//LiliTransport/search_user_books.php";
+	private final static int ONE = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,37 +73,42 @@ public class BookedRideActivity extends ActionBarActivity {
 
 		listView = (ListView) findViewById(R.id.bookedRidesListView);
 
-		pickDateButton = (Button) findViewById(R.id.booked_ride_date_button);
-		if (pickDateButton.getText().toString().equalsIgnoreCase("Pick date")) {
-			String dateFormat = "yyyy-MM-dd";
-			date = DateFormat.format(dateFormat, new Date()).toString();
-		}
+		listView.setOnItemClickListener(new OnItemClickListener() {
 
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				ScheduleList sd = (ScheduleList) parent
+						.getItemAtPosition(position);
+				Intent intent = new Intent(BookedRideActivity.this,
+						SearchRideActivity.class);
+				intent.putExtra("serviceGroup", sd.getServiceGroup());
+				intent.putExtra("taxiId", sd.getTaxiID());
+				intent.putExtra("name", sd.getName());
+				intent.putExtra("phone", sd.getPhonenumber());
+				intent.putExtra("transportId", sd.getTransportID());
+				intent.putExtra("starting", sd.getStartingPoint());
+				intent.putExtra("destination", sd.getDestinationPoint());
+				intent.putExtra("date", sd.getDate());
+				intent.putExtra("pickingTime", sd.getPickUpTime());
+				intent.putExtra("status", sd.getStatus());
+				startActivity(intent);
+
+			}
+		});
+
+		pickDateButton = (Button) findViewById(R.id.booked_ride_date_button);
+
+		TextView tvDate = (TextView) findViewById(R.id.tv_booked_ride);
+
+		tvDate.setText(DateFormat.format("d-MM-yyyy", new Date()).toString()
+				+ "->");
 		SharedPreferences sharedPref = BookedRideActivity.this
 				.getSharedPreferences(getString(R.string.com_lily_pre), 0);
 		phonenumber = sharedPref.getString("phone", "").trim();
 
-		new SearchBooksAsynckTask().execute(phonenumber, date);
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.booked_ride, menu);
-		return true;
-	}
-
-	public void pickDateDialog(View view) {
-		DialogFragment newFragment = new DatePickerFragment();
-		newFragment.show(getSupportFragmentManager(), "Date Picker");
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
+		new SearchBooksAsynckTask().execute(phonenumber,
+				DateFormat.format("yyyy-MM-dd", new Date()).toString());
 	}
 
 	private class BookedArrayAdapter extends ArrayAdapter<ScheduleList> {
@@ -134,22 +144,18 @@ public class BookedRideActivity extends ActionBarActivity {
 			pickingTime.setText(scheduleList.get(position).getPickUpTime());
 
 			serviceGroup.setText(scheduleList.get(position).getServiceGroup());
-			TextView requestTv = (TextView) convertView
-					.findViewById(R.id.ask_ride_request_tv);
-
-			if (scheduleList.get(position).getStatus()
-					.equalsIgnoreCase("Approved")) {
+			TextView requestTv = (TextView) convertView.findViewById(R.id.ask_ride_request_tv);
+			System.out.println(scheduleList.get(position).getStatus()+"jlfkjdlkfjldjfldksjlf");
+			if (scheduleList.get(position).getStatus().equalsIgnoreCase("Approved")) {
 				requestTv.setText("Approved");
 				requestTv.setTextColor(Color.GREEN);
 
-			} else if (scheduleList.get(position).getStatus()
-					.equalsIgnoreCase("Canceled")) {
+			} else if (scheduleList.get(position).getStatus().equalsIgnoreCase("Cancled")) {
 
 				requestTv.setText("Request Canceled: ");
 				requestTv.setTextColor(Color.RED);
 
-			} else if (scheduleList.get(position).getStatus()
-					.equalsIgnoreCase("Waiting")) {
+			} else if (scheduleList.get(position).getStatus().equalsIgnoreCase("Waiting")) {
 				requestTv.setText("Waiting");
 				requestTv.setTextColor(Color.DKGRAY);
 
@@ -160,6 +166,13 @@ public class BookedRideActivity extends ActionBarActivity {
 
 			return convertView;
 		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		onSearchButtonClicked(new View(this));
+
 	}
 
 	private class SearchBooksAsynckTask extends AsyncTask<String, Void, String> {
@@ -174,13 +187,13 @@ public class BookedRideActivity extends ActionBarActivity {
 
 		@Override
 		protected String doInBackground(String... params) {
-			// TODO Auto-generated method stub
+
 			String content = null;
 			try {
 				DefaultHttpClient httpClient = new DefaultHttpClient();
 				System.out.println(params[0]);
 				// get the first argument passed to the execute method
-				HttpPost httpPost = new HttpPost(BOOKED_URL);
+				HttpPost httpPost = new HttpPost(LilyUrls.BOOKED_URL);
 				List<NameValuePair> nameValuePaire = new ArrayList<NameValuePair>(
 						2);
 				nameValuePaire.add(new BasicNameValuePair("phonenumber",
@@ -225,16 +238,43 @@ public class BookedRideActivity extends ActionBarActivity {
 
 	}
 
+	// TODO
+
+	public void onSearchButtonClicked(View view) {
+		if (pickDateButton.getText().toString().trim()
+				.equalsIgnoreCase("Pick Date")) {
+			return;
+		}
+		SimpleDateFormat dateForamt = new SimpleDateFormat("d-MM-yyyy");
+		Date mysqlformatdate;
+		try {
+			mysqlformatdate = dateForamt.parse(pickDateButton.getText()
+					.toString());
+			new SearchBooksAsynckTask()
+					.execute(phonenumber,
+							DateFormat.format("yyyy-MM-dd", mysqlformatdate)
+									.toString());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	public void pickDateDialog(View view) {
+		DialogFragment newFragment = new DatePickerFragment();
+		newFragment.show(getSupportFragmentManager(), "Date Picker");
+	}
+
 	public static class DatePickerFragment extends DialogFragment implements
 			DatePickerDialog.OnDateSetListener {
-		Button datePicker;
 
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
 			// Use the current date as the default date in the picker
 			final Calendar c = Calendar.getInstance();
 			int currentYear = c.get(Calendar.YEAR);
-			int currentMonth = c.get(Calendar.MONTH) ;
+			int currentMonth = c.get(Calendar.MONTH);
 			int currentDay = c.get(Calendar.DAY_OF_MONTH);
 
 			// Create a new instance of DatePickerDialog and return it
@@ -244,14 +284,19 @@ public class BookedRideActivity extends ActionBarActivity {
 
 		@Override
 		public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
-			// TODO Auto-generated method stub
 
-			datePicker = (Button) getActivity().findViewById(R.id.booked_ride_date_button);
-			String date = Integer.toString(arg3) + "-" + Integer.toString(arg2+ONE)+ "-" + Integer.toString(arg1);
-		
+			Button datePicker = (Button) getActivity().findViewById(
+					R.id.booked_ride_date_button);
+			TextView tvDate = (TextView) getActivity().findViewById(
+					R.id.tv_booked_ride);
+
+			String date = Integer.toString(arg3) + "-"
+					+ Integer.toString(arg2 + ONE) + "-"
+					+ Integer.toString(arg1);
+
 			datePicker.setText(date);
-			//TODO 
-		//	SearchBooksAsynckTask();
+			tvDate.setText(date);
+
 		}
 	}
 }

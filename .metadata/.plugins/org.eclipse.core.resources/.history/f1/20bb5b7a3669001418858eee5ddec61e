@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/tv_name_rserved_post_rides"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_color"
+        android:textSize="20sp" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:contentDescription="@string/lily"
+            android:id="@+id/callImageButton_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="callNumberCustomer"
+            android:src="@drawable/dial_phone_telephone_call_widgets_waiting" />
+
+        <TextView
+            android:id="@+id/tv_phonenuber_rserved_post_rides"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_color"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/button_approve_rserved_post_rides"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+             android:textSize="20sp"
+            android:onClick="approveRequest"
+            android:textColor="@color/text_color" />
+
+        <Button
+            android:id="@+id/button_cancel_rserved_post_rides"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+             android:textSize="20sp"
+            android:onClick="cancelRequest"
+            android:textColor="@color/text_color" />
+    </LinearLayout>
+
+</LinearLayout>

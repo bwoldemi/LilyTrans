@@ -54,6 +54,7 @@
 	<color name="background_filter_layout">#000</color>
     <string name="title_activity_basic_info">BasicInfoActivity</string>
     <string name="title_activity_setting">Setting</string>
+      <string name="search">Search</string>
   
     <string-array name="service_providers">
         <item>Taxi</item>

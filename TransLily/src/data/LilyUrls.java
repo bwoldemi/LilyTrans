@@ -11,5 +11,6 @@ public class LilyUrls {
 	public final static String URL_APPROVE_CANCEL_REQUEST="http://tutbereket.net/LiliTransport/provider_approve_cancel_request.php";
 	
 	public final static String DELETE_POST_URL="http://tutbereket.net/LiliTransport/delete_post_rides.php";
-	//l/LiliTransport/delete_post_rides
+	public final static String BOOKED_URL = "http://tutbereket.net//LiliTransport/search_user_books.php";
+
 }

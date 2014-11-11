@@ -6,7 +6,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
 public class Parser {
 	public static Vector<ScheduleList> parse(String content)
 			throws JSONException {
@@ -17,7 +16,7 @@ public class Parser {
 		for (int i = 0; i < jsonArray.length(); i++) {
 			schedule = new ScheduleList();
 			JSONObject object = jsonArray.getJSONObject(i);
-			
+
 			schedule.setTransportID(Integer.parseInt(object.getString("ID")));
 			schedule.setServiceGroup(object.getString("ServiceGroup"));
 			schedule.setTaxiID(object.getString("GroupId"));
@@ -26,28 +25,31 @@ public class Parser {
 			schedule.setPickUpTime(object.getString("PickUpTime"));
 			schedule.setDate(object.getString("Date"));
 			schedule.setName(object.getString("Name"));
-			try{
-				if(object.getString("Capacity").trim().equalsIgnoreCase("")){
+			try {
+				if (object.getString("Capacity").trim().equalsIgnoreCase("")) {
 					schedule.setNumbureOfPersons(0);
-				}else{
-					schedule.setNumbureOfPersons(Integer.parseInt(object.getString("Capacity")));
+				} else {
+					schedule.setNumbureOfPersons(Integer.parseInt(object
+							.getString("Capacity")));
 				}
-			
-			}catch (Exception ex){
+
+			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
-			
+
 			schedule.setPhonenumber(object.getString("PhoneNumber"));
 			schedule.setComment(object.getString("Comment"));
-			schedule.setStatus(object.optString("status"));
-			System.out.println(object.optString("status")+"*************");
+			if (object.optString("status").trim().equals("")) {
+				schedule.setStatus(object.optString("Status"));
+			} else {
+				schedule.setStatus(object.optString("status"));
+			}
+
 			schedules.add(schedule);
 		}
 		return schedules;
 	}
-	
-	
-	
+
 	public static Vector<BookedSchedule> parseBookedRides(String content)
 			throws JSONException {
 		Vector<BookedSchedule> bookedSchedules = new Vector<BookedSchedule>();
@@ -57,10 +59,12 @@ public class Parser {
 		for (int i = 0; i < jsonArray.length(); i++) {
 			bookedSchedule = new BookedSchedule();
 			JSONObject object = jsonArray.getJSONObject(i);
-			bookedSchedule.setBookId(Integer.parseInt(object.getString("BookID")));
+			bookedSchedule.setBookId(Integer.parseInt(object
+					.getString("BookID")));
 			bookedSchedule.setName(object.getString("Name"));
 			bookedSchedule.setPhonenumber(object.getString("PhoneNumber"));
-			bookedSchedule.setTransportID(Integer.parseInt(object.getString("ID")));
+			bookedSchedule.setTransportID(Integer.parseInt(object
+					.getString("ID")));
 			bookedSchedule.setStatus(object.getString("Status"));
 			bookedSchedules.add(bookedSchedule);
 		}
