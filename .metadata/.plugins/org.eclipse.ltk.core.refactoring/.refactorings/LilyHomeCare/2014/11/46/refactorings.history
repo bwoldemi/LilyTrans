@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;&apos; to &apos;lily.homecare.MainActivity.onPause()&apos;&#x0D;&#x0A;- Original project: &apos;LilyHomeCare&apos;&#x0D;&#x0A;- Destination element: &apos;lily.homecare.MainActivity.onPause()&apos;&#x0D;&#x0A;- Original element: &apos;lily.homecare.MainActivity.onPause()&apos;" description="Copy method" destination="/src&lt;lily.homecare{MainActivity.java[MainActivity~onPause" element1="/src&lt;lily.homecare{MainActivity.java[MainActivity~onPause" flags="589830" id="org.eclipse.jdt.ui.copy" members="1" policy="org.eclipse.jdt.ui.copyMembers" stamp="1415710964771" version="1.0"/>
+</session>

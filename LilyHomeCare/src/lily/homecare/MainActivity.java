@@ -44,8 +44,10 @@ public class MainActivity extends Activity implements TaskObsorver {
 	private TextView textViewTaskDetail;
 	private TextView textViewTaskReview;
 	private ImageView imageView;
+
 	private boolean taskListed = false;
 	private boolean taskStarted = false;
+	private boolean taskCompleted = false;
 
 	private String currentTaskTagId = null;
 
@@ -68,7 +70,7 @@ public class MainActivity extends Activity implements TaskObsorver {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		imageView = (ImageView)findViewById(R.id.imageView);
+		imageView = (ImageView) findViewById(R.id.imageView);
 
 		// customerTask = new TaskForOneCustomer();
 		textViewCustmerName = (TextView) findViewById(R.id.textViewCustomerName);
@@ -77,7 +79,7 @@ public class MainActivity extends Activity implements TaskObsorver {
 		textviewTaskName = (TextView) findViewById(R.id.textViewTaskName);
 		textViewTaskDetail = (TextView) findViewById(R.id.textViewTaskDetail);
 		textViewTaskReview = (TextView) findViewById(R.id.textViewTaskReview);
-		progressDialog= new ProgressDialog(this);
+		progressDialog = new ProgressDialog(this);
 
 		// getting NFC service
 		mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -94,14 +96,13 @@ public class MainActivity extends Activity implements TaskObsorver {
 			Toast.makeText(this, "Please Enable NFC Mode", Toast.LENGTH_LONG)
 					.show();
 		}
-		if(!checkNetwork()){
+		if (!checkNetwork()) {
 			Toast.makeText(this, "Please Enable Internet ", Toast.LENGTH_LONG)
-			.show();
+					.show();
 		}
 		// Initializing
-		server = new Server((Context)this);
+		server = new Server((Context) this);
 		server.setmObsorver((TaskObsorver) this);
-	
 
 	}
 
@@ -141,15 +142,16 @@ public class MainActivity extends Activity implements TaskObsorver {
 	@Override
 	protected void onNewIntent(Intent intent) {
 		if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
-			
-			if(!checkNetwork()){
-				Toast.makeText(this, "Please Enable Internet ", Toast.LENGTH_LONG)
-				.show();
+
+			if (!checkNetwork()) {
+				Toast.makeText(this, "Please Enable Internet ",
+						Toast.LENGTH_LONG).show();
 				return;
 			}
+
 			String tagUssage = null;
 			NdefMessage[] messages = getNdefMessage(intent);
-			// for TNF Media type
+
 			if (messages != null) {
 				StringBuilder type = new StringBuilder();
 				StringBuilder data = new StringBuilder();
@@ -161,48 +163,68 @@ public class MainActivity extends Activity implements TaskObsorver {
 					}
 				}
 
-				tagUssage = type.toString();
+				tagUssage = type.toString().trim();
 				tagId = data.toString();
-				
-				if (tagUssage.equals("application/door") && taskListed == false
+
+				if (tagUssage.equals("application/door")
 						&& taskStarted == false) {
 					tagId.toString();
 					server.setTagData(tagId);
 					server.retriveData();
-				} else if (tagUssage.equals("application/door")
-						&& taskListed == true) {
-					// if user scan door nfc tag twice
-					Toast.makeText(this,"Please tap Task-Tags, to see list of Tasks",
-							Toast.LENGTH_LONG).show();
-				} else if (tagUssage.equals("application/task")
-						&& taskStarted == false && taskListed == true) {
-					Tasks task = null;
 
+				} else if (tagUssage.equals("application/door")
+						&& taskStarted == true && taskCompleted == false) {
+					Toast.makeText(
+							this,
+							"Tasks Not Completed !!! Please Complete tasks first !",
+							Toast.LENGTH_LONG).show();
+				} else if (tagUssage.equals("application/door")
+						&& taskStarted == true && taskCompleted == true) {
+					taskStarted = false;
+					
+					customerTask.setFinishingTime(new Date());
+					String startTime = DateFormat.format("h:mm a",
+							customerTask.getStartTime()).toString();
+					String endTime = DateFormat.format("h:mm a",
+							customerTask.getFinishingTime()).toString();
+
+					textViewTaskReview.setText(Html.fromHtml("Task Completed" + "<br/>"
+							+ "<font style='yellow'>" + startTime + " - " + endTime
+							+ "</font>"));
+
+					this.taskCompleted(new Date());
+					// TODO : **** Complete the task and send data to server
+
+				} else if (tagUssage.equals("application/task")
+						&& taskStarted == false) {
+					// Please Tap the door tag
+					Toast.makeText(this, "Please first read DOOR TAG !!!",
+							Toast.LENGTH_LONG).show();
+				} else if (tagUssage.equals("application/task")&& taskStarted == true) {
+
+					Tasks task = null;
 					for (Tasks t : this.tasks) {
-						System.out.println(t.getTaskTagID());
 						if (t.getTaskTagID().equalsIgnoreCase(tagId)) {
 							task = t;
-							System.out.println(t.getTaskTagID());
 						}
 					}
+
 					if (task != null) {
 						displayTaskDetail(task);
 					}
+					if (task.getTaskStartingTime() == null) {
+						task.setTaskStartingTime(new Date());
+						// Start Task
 
-				} else if (tagUssage.equals("application/task")
-						&& taskStarted == true && taskListed == false) {
-					// check if it is same tag, if same taskid display dialog
-					// else ask to diplay
-					if (currentTaskTagId.equals(tagId)) {
-						AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-						dialog.setTitle("Task status");
+					} else {
+						AlertDialog.Builder dialog = new AlertDialog.Builder( this);
+						dialog.setTitle(task.getTaskName());
 						dialog.setMessage("Click YES to complete the task!")
 								.setCancelable(false)
 								.setPositiveButton("Yes",
 										new DialogInterface.OnClickListener() {
 											public void onClick(
-													DialogInterface dialog,
-													int id) {
+													DialogInterface dialog,int id) {
 
 												Tasks task = null;
 												for (Tasks t : tasks) {
@@ -213,7 +235,10 @@ public class MainActivity extends Activity implements TaskObsorver {
 													}
 												}
 												task.setTaskEndingTime(new Date());
-												server.uploadData(task, customerTask.getFirstName()+" " +customerTask.getLastName());
+												server.uploadData(task,customerTask
+																.getFirstName()
+																+ " "
+																+ customerTask .getLastName());
 												listTask();
 
 											}
@@ -228,14 +253,12 @@ public class MainActivity extends Activity implements TaskObsorver {
 										});
 						AlertDialog alertDialog = dialog.create();
 						alertDialog.show();
-					} else {
-						Toast.makeText(this, "Please Complete Current Task",
-								Toast.LENGTH_SHORT).show();
-					}
-				}
 
+					}
+
+				}
 			}
-		}// last
+		}
 
 	}
 
@@ -276,32 +299,18 @@ public class MainActivity extends Activity implements TaskObsorver {
 		return message;
 
 	}
- /**
-  * displaying detail task 
-  * @param task
-  */
+
+	/**
+	 * displaying detail task
+	 * 
+	 * @param task
+	 */
 	public void displayTaskDetail(Tasks task) {
-
-		if (task.getTaskStartingTime() != null) {
-
-			Toast.makeText(this, "Task already Done/Started",
-					Toast.LENGTH_SHORT).show();
-
-		} else {
-			currentTaskTagId = tagId;
-			this.taskStarted = true;
-			this.taskListed = false;
-
-			task.setTaskStartingTime(new Date());
-			if (task != null) {
-				textviewTaskName.setText(Html.fromHtml("<b> Task Name</b>"
-						+ ": " + task.getTaskName()));
-				textViewTaskDetail.setText(Html
-						.fromHtml("<b>Task Detail</b><br/>" + "  *"
-								+ task.getTaskDetail()));
-			}
-		}
-
+		currentTaskTagId = tagId;
+		textviewTaskName.setText(Html.fromHtml("<b> Task Name</b>" + ": "
+				+ task.getTaskName()));
+		textViewTaskDetail.setText(Html.fromHtml("<b>Task Detail</b><br/>"
+				+ "  *" + task.getTaskDetail()));
 	}
 
 	/**
@@ -311,8 +320,6 @@ public class MainActivity extends Activity implements TaskObsorver {
 		// clearing text fields
 		reset();
 		imageView.setVisibility(View.GONE);
-		this.taskStarted = false;
-		this.taskListed = true;
 
 		if (customerTask == null) {
 			return;
@@ -362,23 +369,13 @@ public class MainActivity extends Activity implements TaskObsorver {
 				}
 			}
 		}
-
+		// TODO check if completed
 		if (isAllTasksCompleted()) {
-			customerTask.setFinishingTime(new Date());
-			String startTime = DateFormat.format("h:mm a",
-					customerTask.getStartTime()).toString();
-			String endTime = DateFormat.format("h:mm a",
-					customerTask.getFinishingTime()).toString();
-
-			textViewTaskReview.setText(Html.fromHtml("Task Completed" + "<br/>"
-					+ "<font style='yellow'>" + startTime + " - " + endTime
-					+ "</font>"));
-
-			this.taskCompleted(new Date());
+			taskCompleted=true;
 		}
 
 	}
-	
+
 	public void enableForeGround() {
 		IntentFilter ndefIntentFilter = new IntentFilter(
 				NfcAdapter.ACTION_NDEF_DISCOVERED);
@@ -394,7 +391,7 @@ public class MainActivity extends Activity implements TaskObsorver {
 	}
 
 	/**
-	 * initialize the text fields and variables  
+	 * initialize the text fields and variables
 	 */
 	public void initialize() {
 
@@ -409,8 +406,9 @@ public class MainActivity extends Activity implements TaskObsorver {
 		taskStarted = false;
 
 	}
+
 	/**
-	 * reseting text fields 
+	 * reseting text fields
 	 */
 	public void reset() {
 		textViewCustmerName.setText("");
@@ -437,7 +435,7 @@ public class MainActivity extends Activity implements TaskObsorver {
 	public void taskStarted(Date date) {
 		customerTask.setStartTime(date);
 		listTask();
-		taskListed = true;
+		taskStarted = true;
 	}
 
 	@Override
@@ -483,7 +481,7 @@ public class MainActivity extends Activity implements TaskObsorver {
 		} else if (id == R.id.about) {
 			AlertDialog.Builder dialog = new AlertDialog.Builder(this);
 			dialog.setTitle("About Lily Homecare");
-			String about= getString(R.string.about_lily);
+			String about = getString(R.string.about_lily);
 			dialog.setMessage(Html.fromHtml(about));
 			dialog.setPositiveButton("Close",
 					new DialogInterface.OnClickListener() {
@@ -503,7 +501,7 @@ public class MainActivity extends Activity implements TaskObsorver {
 			Intent intent = new Intent(this, Writer.class);
 			startActivity(intent);
 			return true;
-		} 
+		}
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -512,7 +510,7 @@ public class MainActivity extends Activity implements TaskObsorver {
 		progressDialog.setTitle("Downloading");
 		progressDialog.setMessage("Retriving Data ...");
 		progressDialog.show();
-		
+
 	}
 
 }
