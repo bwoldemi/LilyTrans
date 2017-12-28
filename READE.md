@@ -1,1 +1,1 @@
-Transport application: Aim to develop an android application for sharing transports 
+Transport application: Aim to develop a transport sharing android app 
